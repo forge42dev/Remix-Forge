@@ -23,7 +23,7 @@
         {
           "command": "remix-forge.generateRemixRoute",
           "when": "explorerResourceIsFolder",
-          "group": "navigation"
+          "group": "navigation@20"
         }
       ]
     }
