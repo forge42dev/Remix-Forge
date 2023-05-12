@@ -24,7 +24,7 @@ Including:
 
 Here is an example video of the basic usage:
 
-<video src="./basic-demo.mp4" controls="controls" style="max-width: 730px;">
+<video src="https://raw.githubusercontent.com/Code-Forge-Net/Remix-Forge/main/basic-demo.mp4" controls="controls" style="max-width: 730px;">
 </video>
 
 ## Extension Settings 
@@ -45,11 +45,15 @@ This extension contributes the following configuration settings:
 
 ## Release Notes 
 
-### 1.0.1
+### 0.0.1
 
 Initial release of Remix Forge
  
-### 1.0.2
+### 0.0.2
+
+Readme update
+
+### 0.0.3
 
 Readme update
  
