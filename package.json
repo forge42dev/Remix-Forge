@@ -1,17 +1,111 @@
 {
   "name": "remix-forge",
   "displayName": "Remix Forge",
-  "description": "To be added",
+  "description": "Remix generator for route files to help you generate your routes faster.",
   "version": "0.0.1",
+  "icon": "https://github.com/Code-Forge-Net/Remix-Forge/blob/main/remix-logo.png",
   "engines": {
     "vscode": "^1.78.0"
   },
   "categories": [
+    "Snippets",
     "Other"
   ],
   "activationEvents": [],
   "main": "./dist/extension.js",
   "contributes": {
+    "configuration": {
+      "title": "Remix Forge",
+      "properties": {
+        "remix-forge.preselected": {
+          "type": "array",
+          "enum": [
+            "all",
+            "route",
+            "loader",
+            "action",
+            "meta",
+            "handle",
+            "links",
+            "errorBoundary",
+            "revalidate",
+            "headers"
+          ],
+          "description": "Preselects parts to generate when creating a new route."
+        },
+        "remix-forge.orderOfGeneration": {
+          "type": "array",
+          "enum": [
+            "links",
+            "meta",
+            "handler",
+            "headers",
+            "loader",
+            "action",
+            "component",
+            "errorBoundary",
+            "revalidate"
+          ],
+          "minItems": 9,
+          "maxItems": 9,
+          "description": "Order of the parts to be generated (top to bottom). You have to include all of them otherwise you won't generate parts if they are not included in this array."
+        },
+        "remix-forge.loader": {
+          "type": "string",
+          "default": "",
+          "description": "Remix loader code to generate instead of the default one. Leave empty to use the default loader.",
+          "editPresentation": "multilineText"
+        },
+        "remix-forge.action": {
+          "type": "string",
+          "default": "",
+          "description": "Remix action code to generate instead of the default one. Leave empty to use the default action.",
+          "editPresentation": "multilineText"
+        },
+        "remix-forge.meta": {
+          "type": "string",
+          "default": "",
+          "description": "Remix meta code to generate instead of the default one. Leave empty to use the default meta.",
+          "editPresentation": "multilineText"
+        },
+        "remix-forge.handle": {
+          "type": "string",
+          "default": "",
+          "description": "Remix handle code to generate instead of the default one. Leave empty to use the default handle.",
+          "editPresentation": "multilineText"
+        },
+        "remix-forge.component": {
+          "type": "string",
+          "default": "",
+          "description": "Remix component code to generate instead of the default one. Leave empty to use the default component.",
+          "editPresentation": "multilineText"
+        },
+        "remix-forge.links": {
+          "type": "string",
+          "default": "",
+          "description": "Remix links code to generate instead of the default one. Leave empty to use the default links.",
+          "editPresentation": "multilineText"
+        },
+        "remix-forge.errorBoundary": {
+          "type": "string",
+          "default": "",
+          "description": "Remix errorBoundary code to generate instead of the default one. Leave empty to use the default errorBoundary.",
+          "editPresentation": "multilineText"
+        },
+        "remix-forge.revalidate": {
+          "type": "string",
+          "default": "",
+          "description": "Remix revalidate code to generate instead of the default one. Leave empty to use the default revalidate.",
+          "editPresentation": "multilineText"
+        },
+        "remix-forge.headers": {
+          "type": "string",
+          "default": "",
+          "description": "Remix headers code to generate instead of the default one. Leave empty to use the default headers.",
+          "editPresentation": "multilineText"
+        }
+      }
+    },
     "commands": [
       {
         "command": "remix-forge.generateRemixRoute",
@@ -38,6 +132,10 @@
     "pretest": "npm run compile-tests && npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
     "test": "node ./out/test/runTest.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Code-Forge-Net/Remix-Forge"
   },
   "devDependencies": {
     "@types/vscode": "^1.78.0",

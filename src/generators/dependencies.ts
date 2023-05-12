@@ -1,9 +1,4 @@
-import { WorkspaceConfiguration } from "vscode";
-
-export const generateDependencies = (
-  config: WorkspaceConfiguration,
-  selectedGenerators: string[]
-) => {
+export const generateDependencies = (selectedGenerators: string[]) => {
   const reactDeps = [];
   const remixDeps = [];
   const reactTypeDeps = [];

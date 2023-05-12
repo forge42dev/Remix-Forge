@@ -1,71 +1,53 @@
-# remix-forge README
+# Remix Forge README
 
-This is the README for your extension "remix-forge". After writing up a brief description, we recommend including the following sections.
+Remix Forge - A VS Code extension for generating route files for Remix.run applications.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+Generates every possible export from a route file for Remix.run applications.
+Including:
+- `dependencies`
+- `loader function`
+- `links function`
+- `ErrorBoundary component`
+- `default Component`
+- `shouldRevalidate function`
+- `meta function`
+- `action function`
+- `headers function`
+- `handle function`
+ 
 
-For example if there is an image subfolder under your extension project workspace:
+> Tip: This is highly configurable per workspace. See the [Extension Settings](#extension-settings) section on how you can customize your output
 
-\!\[feature X\]\(images/feature-x.png\)
+## Usage
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+Here is an example video of the basic usage:
 
-## Requirements
+<video src="https://github.com/Code-Forge-Net/Remix-Forge/blob/main/basic-demo.mp4" controls="controls" style="max-width: 730px;">
+</video>
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+## Extension Settings 
 
-## Extension Settings
+This extension contributes the following configuration settings:
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+* `remix-forge.preselected`: Array of preselected options after clicking the Generate Remix route (`default is []`).
+* `remix-forge.orderOfGeneration`: Allows you to change the order of generation, eg: ["loader", "action"] (`default is []`).
+* `remix-forge.loader`: Allows you to change the output for the loader segment of the code (`default is ''`).
+* `remix-forge.action`: Allows you to change the output for the action segment of the code (`default is ''`).
+* `remix-forge.meta`: Allows you to change the output for the meta segment of the code (`default is ''`).
+* `remix-forge.handle`: Allows you to change the output for the handle segment of the code (`default is ''`).
+* `remix-forge.component`: Allows you to change the output for the component segment of the code (`default is ''`).
+* `remix-forge.links`: Allows you to change the output for the links segment of the code (`default is ''`).
+* `remix-forge.errorBoundary`: Allows you to change the output for the ErrorBoundary segment of the code (`default is ''`).
+* `remix-forge.revalidate`: Allows you to change the output for the revalidate segment of the code (`default is ''`).
+* `remix-forge.headers`: Allows you to change the output for the headers segment of the code (`default is ''`).
 
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
+## Release Notes 
 
 ### 1.0.0
 
-Initial release of ...
+Initial release of Remix Forge
+ 
 
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+  

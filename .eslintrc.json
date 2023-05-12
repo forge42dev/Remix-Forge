@@ -15,6 +15,7 @@
         "eqeqeq": "warn",
         "no-throw-literal": "warn",
         "semi": "off"
+        
     },
     "ignorePatterns": [
         "out",
