@@ -1,4 +1,4 @@
-# Remix Forge README
+# Remix Forge
 
 Remix Forge - A VS Code extension for generating route files for Remix.run applications.
 
@@ -24,7 +24,7 @@ Including:
 
 Here is an example video of the basic usage:
 
-<video src="https://github.com/Code-Forge-Net/Remix-Forge/blob/main/basic-demo.mp4" controls="controls" style="max-width: 730px;">
+<video src="./basic-demo.mp4" controls="controls" style="max-width: 730px;">
 </video>
 
 ## Extension Settings 
@@ -45,9 +45,13 @@ This extension contributes the following configuration settings:
 
 ## Release Notes 
 
-### 1.0.0
+### 1.0.1
 
 Initial release of Remix Forge
+ 
+### 1.0.2
+
+Readme update
  
 
   

@@ -2,8 +2,9 @@
   "name": "remix-forge",
   "displayName": "Remix Forge",
   "description": "Remix generator for route files to help you generate your routes faster.",
-  "version": "0.0.1",
-  "icon": "https://github.com/Code-Forge-Net/Remix-Forge/blob/main/remix-logo.png",
+  "version": "0.0.2",
+  "icon": "./remix-logo.png",
+  "publisher": "CodeForge",
   "engines": {
     "vscode": "^1.78.0"
   },
