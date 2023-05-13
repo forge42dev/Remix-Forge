@@ -29,24 +29,16 @@ export const generateDependencies = (selectedGenerators: string[]) => {
   const output = [];
 
   if (metaDeps.length) {
-    output.push(
-      `import type { ${metaDeps.join(
-        ", "
-      )} } from "@remix-run/react/dist/routeModules";`
-    );
+    output.push(`import type { ${metaDeps.join(", ")} } from "@remix-run/react/dist/routeModules";`);
   }
   if (remixDeps.length) {
-    output.push(
-      `import type { ${remixDeps.join(", ")} } from "@remix-run/node";`
-    );
+    output.push(`import type { ${remixDeps.join(", ")} } from "@remix-run/node";`);
   }
   if (reactDeps.length) {
     output.push(`import { ${reactDeps.join(", ")} } from "@remix-run/react";`);
   }
   if (reactTypeDeps.length) {
-    output.push(
-      `import type { ${reactTypeDeps.join(", ")} } from "@remix-run/react";`
-    );
+    output.push(`import type { ${reactTypeDeps.join(", ")} } from "@remix-run/react";`);
   }
 
   return output.join("\n");

@@ -26,14 +26,14 @@ export const GENERATORS = {
 
 export type Generator = keyof typeof GENERATORS;
 
-export const generatorOptions = (
-  config: WorkspaceConfiguration
-): {
+interface GeneratorOption {
   label: string;
   description: string;
   key: Exclude<Generator, "dependencies" | "component">;
   picked: boolean;
-}[] => {
+}
+
+export const generatorOptions = (config: WorkspaceConfiguration): GeneratorOption[] => {
   const preselected = config.get<string[]>("preselected") ?? [];
   const allSelected = preselected.includes("all");
   return [

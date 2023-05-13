@@ -5,9 +5,5 @@ export const generateHandler = (config: WorkspaceConfiguration) => {
   if (customHandle) {
     return customHandle + "\n";
   }
-  return [
-    `export const handle = () => ({`,
-    `  // your handler here`,
-    `});`,
-  ].join("\n");
+  return [`export const handle = () => ({`, `  // your handler here`, `});`].join("\n");
 };

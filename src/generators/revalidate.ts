@@ -5,9 +5,5 @@ export const generateRevalidate = (config: WorkspaceConfiguration) => {
   if (customRevalidate) {
     return customRevalidate + "\n";
   }
-  return [
-    `export const shouldRevalidate: ShouldRevalidateFunction = () => {`,
-    ` return true;`,
-    `};`,
-  ].join("\n");
+  return [`export const shouldRevalidate: ShouldRevalidateFunction = () => {`, ` return true;`, `};`].join("\n");
 };

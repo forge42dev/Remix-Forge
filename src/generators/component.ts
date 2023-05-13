@@ -1,9 +1,6 @@
 import type { WorkspaceConfiguration } from "vscode";
 
-export const generateComponent = (
-  config: WorkspaceConfiguration,
-  withLoader: boolean = false
-) => {
+export const generateComponent = (config: WorkspaceConfiguration, withLoader: boolean = false) => {
   const customComponent = config.get("component");
   if (customComponent) {
     return customComponent + "\n";

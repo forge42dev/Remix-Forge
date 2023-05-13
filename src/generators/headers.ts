@@ -5,11 +5,5 @@ export const generateHeaders = (config: WorkspaceConfiguration) => {
   if (customHeaders) {
     return customHeaders + "\n";
   }
-  return [
-    `export const headers: HeadersFunction = () => (`,
-    `  {`,
-    `    // your headers here`,
-    `  }`,
-    `);`,
-  ].join("\n");
+  return [`export const headers: HeadersFunction = () => (`, `  {`, `    // your headers here`, `  }`, `);`].join("\n");
 };

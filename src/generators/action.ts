@@ -5,9 +5,5 @@ export const generateAction = (config: WorkspaceConfiguration) => {
   if (customAction) {
     return customAction + "\n";
   }
-  return [
-    `export const action = async ({ request }: ActionArgs) => {`,
-    `  return null;`,
-    `};`,
-  ].join("\n");
+  return [`export const action = async ({ request }: ActionArgs) => {`, `  return null;`, `};`].join("\n");
 };

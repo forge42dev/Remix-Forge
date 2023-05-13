@@ -44,18 +44,20 @@ This extension contributes the following configuration settings:
 * `remix-forge.headers`: Allows you to change the output for the headers segment of the code (`default is ''`).
 
 ## Release Notes 
+### 0.0.3
+
+Readme update
+
+### 0.0.2
+
+Readme update
 
 ### 0.0.1
 
 Initial release of Remix Forge
  
-### 0.0.2
 
-Readme update
 
-### 0.0.3
-
-Readme update
  
 
   

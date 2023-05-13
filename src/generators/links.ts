@@ -5,11 +5,5 @@ export const generateLinks = (config: WorkspaceConfiguration) => {
   if (customLinks) {
     return customLinks + "\n";
   }
-  return [
-    `export const links: LinksFunction = () => (`,
-    `  [`,
-    `    // your links here`,
-    `  ]`,
-    `);`,
-  ].join("\n");
+  return [`export const links: LinksFunction = () => (`, `  [`, `    // your links here`, `  ]`, `);`].join("\n");
 };
