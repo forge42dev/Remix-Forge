@@ -81,6 +81,11 @@
           "description": "Remix component code to generate instead of the default one. Leave empty to use the default component.",
           "editPresentation": "multilineText"
         },
+        "remix-forge.runtimeDependency": {
+          "type": "string",
+          "default": "",
+          "description": "Runtime dependency to use instead of the default one (@remix-run/node)"
+        },
         "remix-forge.links": {
           "type": "string",
           "default": "",
@@ -111,6 +116,10 @@
       {
         "command": "remix-forge.generateRemixRoute",
         "title": "Generate Remix Route"
+      },
+      {
+        "command": "remix-forge.flattenRoutes",
+        "title": "Convert routes to v2 convention"
       }
     ],
     "menus": {
@@ -118,7 +127,12 @@
         {
           "command": "remix-forge.generateRemixRoute",
           "when": "explorerResourceIsFolder",
-          "group": "navigation@20"
+          "group": "2_Remix@1"
+        },
+        {
+          "command": "remix-forge.flattenRoutes",
+          "when": "explorerResourceIsFolder && resourceFilename =~ /routes/",
+          "group": "2_Remix@2"
         }
       ]
     }

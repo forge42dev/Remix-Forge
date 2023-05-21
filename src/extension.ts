@@ -1,8 +1,12 @@
 import * as vscode from "vscode";
 import { GENERATORS, generatorOptions, Generator } from "./generators";
 import { EXTENSION_CONFIG_SECTION, defaultGenerationOrder } from "./config";
+import { flattenRoutes } from "./commands/flattenRoutes";
 
 export function activate(context: vscode.ExtensionContext) {
+  const secondDisposable = vscode.commands.registerCommand("remix-forge.flattenRoutes", async (uri: vscode.Uri) => {
+    await flattenRoutes(uri.path);
+  });
   const disposable = vscode.commands.registerCommand("remix-forge.generateRemixRoute", async (uri: vscode.Uri) => {
     const config = vscode.workspace.getConfiguration(EXTENSION_CONFIG_SECTION);
 
@@ -26,7 +30,7 @@ export function activate(context: vscode.ExtensionContext) {
         const orderOfGeneration = configOrder?.length ? configOrder : defaultGenerationOrder;
         const fileContent = [
           // generates dependencies first
-          GENERATORS["dependencies"](selectedGenerators),
+          GENERATORS["dependencies"](config, selectedGenerators),
           // Generates the rest of the file
           ...orderOfGeneration.map((generatorKey) => {
             if (generatorKey === "component") {
@@ -61,6 +65,7 @@ export function activate(context: vscode.ExtensionContext) {
   });
 
   context.subscriptions.push(disposable);
+  context.subscriptions.push(secondDisposable);
 }
 
 export function deactivate() {}
