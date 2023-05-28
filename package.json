@@ -2,11 +2,11 @@
   "name": "remix-forge",
   "displayName": "Remix Forge",
   "description": "Remix generator for route files to help you generate your routes faster.",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "icon": "./remix-logo.png",
   "publisher": "CodeForge",
   "engines": {
-    "vscode": "^1.78.0"
+    "vscode": "^1.77.0"
   },
   "categories": [
     "Snippets",
@@ -81,6 +81,11 @@
           "description": "Remix component code to generate instead of the default one. Leave empty to use the default component.",
           "editPresentation": "multilineText"
         },
+        "remix-forge.runtimeDependency": {
+          "type": "string",
+          "default": "",
+          "description": "Runtime dependency to use instead of the default one (@remix-run/node)"
+        },
         "remix-forge.links": {
           "type": "string",
           "default": "",
@@ -111,6 +116,10 @@
       {
         "command": "remix-forge.generateRemixRoute",
         "title": "Generate Remix Route"
+      },
+      {
+        "command": "remix-forge.flattenRoutes",
+        "title": "Convert routes to v2 convention"
       }
     ],
     "menus": {
@@ -118,7 +127,12 @@
         {
           "command": "remix-forge.generateRemixRoute",
           "when": "explorerResourceIsFolder",
-          "group": "navigation@20"
+          "group": "2_Remix@1"
+        },
+        {
+          "command": "remix-forge.flattenRoutes",
+          "when": "explorerResourceIsFolder && resourceFilename =~ /routes/",
+          "group": "2_Remix@2"
         }
       ]
     }
@@ -139,7 +153,7 @@
     "url": "https://github.com/Code-Forge-Net/Remix-Forge"
   },
   "devDependencies": {
-    "@types/vscode": "^1.78.0",
+    "@types/vscode": "^1.77.0",
     "@types/glob": "^8.1.0",
     "@types/mocha": "^10.0.1",
     "@types/node": "16.x",

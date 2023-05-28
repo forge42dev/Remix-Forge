@@ -1,4 +1,7 @@
-export const generateDependencies = (selectedGenerators: string[]) => {
+import { WorkspaceConfiguration } from "vscode";
+
+export const generateDependencies = (config: WorkspaceConfiguration, selectedGenerators: string[]) => {
+  const runtimeDependency = config.get("runtimeDependency");
   const reactDeps = [];
   const remixDeps = [];
   const reactTypeDeps = [];
@@ -32,7 +35,9 @@ export const generateDependencies = (selectedGenerators: string[]) => {
     output.push(`import type { ${metaDeps.join(", ")} } from "@remix-run/react/dist/routeModules";`);
   }
   if (remixDeps.length) {
-    output.push(`import type { ${remixDeps.join(", ")} } from "@remix-run/node";`);
+    output.push(
+      `import type { ${remixDeps.join(", ")} } from "${runtimeDependency ? runtimeDependency : "@remix-run/node"}";`
+    );
   }
   if (reactDeps.length) {
     output.push(`import { ${reactDeps.join(", ")} } from "@remix-run/react";`);
