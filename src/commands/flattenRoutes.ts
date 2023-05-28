@@ -2,19 +2,32 @@ import * as vscode from "vscode";
 import { addUnderscoreToFirstPart, updateFileDependencies } from "../utils/dependencies";
 import { commandWithLoading } from "../utils/vscode";
 
-export async function flattenRoutes(rootPath: string) {
+export async function flattenRoutes(uri: vscode.Uri) {
   const confirmation = await vscode.window.showInputBox({
-    prompt: "Please confirm you want to do this and you have a backup in case you run into issues by typing YES",
+    prompt: "Please confirm you want to do this by typing yes or y",
   });
-  /**
-   *   const tempFolderPath = rootPath.replace("routes", "tmp");
+  const confirmationMessage = confirmation?.toLowerCase();
+  if (confirmationMessage !== "yes" && confirmationMessage !== "y" && confirmationMessage !== "") {
+    return await vscode.window.showErrorMessage(
+      "Route conversion aborted. If you want to convert the routes, please try again and type yes or y when prompted."
+    );
+  }
+  const rootPath = uri.path;
+  const tempFolderPath = rootPath.replace("routes", "temp-routes");
   const rootPathUri = vscode.Uri.file(rootPath);
   const tempPathUri = vscode.Uri.file(tempFolderPath);
-   */
-  if (confirmation !== "YES") {
-    return await vscode.window.showErrorMessage("You must confirm you have a backup and you are sure.");
+  // Copy the routes to a temp folder just in case something fails
+  await vscode.workspace.fs.copy(rootPathUri, tempPathUri, { overwrite: true });
+  try {
+    // Convert to v2 convention
+    await commandWithLoading("Flattening routes to v2 convention", () => flattenRoutesSubpaths(rootPath, rootPath));
+    // Remove the old routes
+    await vscode.workspace.fs.delete(tempPathUri, { recursive: true });
+  } catch (e) {
+    await vscode.workspace.fs.copy(tempPathUri, rootPathUri, { overwrite: true });
+    await vscode.workspace.fs.delete(tempPathUri, { recursive: true });
+    await vscode.window.showErrorMessage("An error occurred while flattening the routes. Reverted to initial state.");
   }
-  await commandWithLoading("Flattening routes to v2 convention", () => flattenRoutesSubpaths(rootPath, rootPath));
 }
 
 const flattenRoutesSubpaths = async (root: string, path: string) => {
