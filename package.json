@@ -12,7 +12,9 @@
     "Snippets",
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onLanguage:typescriptreact"
+  ],
   "main": "./dist/extension.js",
   "contributes": {
     "languages": [
