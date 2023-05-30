@@ -56,17 +56,15 @@ export class MyCodeLensProvider implements vscode.CodeLensProvider {
   }
 
   provideCodeLenses(
-    document: vscode.TextDocument
-    /* token: vscode.CancellationToken */
+    document: vscode.TextDocument,
+      token: vscode.CancellationToken  
   ): vscode.ProviderResult<vscode.CodeLens[]> {
     const codeLenses: vscode.CodeLens[] = [];
     const config = vscode.workspace.getConfiguration("remix-forge");
     const urlGenerator = config.get<string>("urlGenerator");
-    const paths = config.get<ConfigPath[]>("urlGeneratorPaths");
-
+    const paths = config.get<ConfigPath[]>("urlGeneratorPaths"); 
     // Define the regular expression pattern to match the function signature
-    const functionPattern = /export\s+default\s+function\s+(\w+)/g;
-
+    const functionPattern = /export\s+default\s+function\s+(\w+)/g; 
     // Iterate over the document's text lines and look for matches
     for (let lineIndex = 0; lineIndex < document.lineCount; lineIndex++) {
       const line = document.lineAt(lineIndex);
@@ -85,7 +83,7 @@ export class MyCodeLensProvider implements vscode.CodeLensProvider {
           // Set the command that will be executed when the code lens is clicked
           newCodeLens.command = {
             title: `Open ${path.title} URL`,
-            command: "extension.openUrl",
+            command: "remix-forge.openUrl",
             arguments: [finalPath],
             tooltip: `${path.title} URL: ${finalPath}`,
           };

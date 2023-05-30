@@ -9,8 +9,9 @@ export function activate(context: vscode.ExtensionContext) {
   const generateRouteFileCommand = vscode.commands.registerCommand("remix-forge.generateRemixRoute", generateRouteFile);
   const openUrlCommand = vscode.commands.registerCommand("remix-forge.openUrl", openUrl);
   const codeLensProvider = new MyCodeLensProvider();
+  
   // Register code-lenses
-  context.subscriptions.push(vscode.languages.registerCodeLensProvider("*", codeLensProvider));
+  context.subscriptions.push(vscode.languages.registerCodeLensProvider( { scheme: 'file', language: 'typescriptreact' }, codeLensProvider));
   // Register the commands
   context.subscriptions.push(generateRouteFileCommand);
   context.subscriptions.push(flattenRoutesCommand);
