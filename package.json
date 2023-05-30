@@ -6,7 +6,7 @@
   "icon": "./remix-logo.png",
   "publisher": "CodeForge",
   "engines": {
-    "vscode": "^1.77.0"
+    "vscode": "^1.78.0"
   },
   "categories": [
     "Snippets",
@@ -23,34 +23,13 @@
           "typescript"
         ],
         "extensions": [
-          ".ts",
           ".tsx"
-        ]
-      },
-      {
-        "id": "javascript",
-        "aliases": [
-          "Javascript",
-          "javascript"
-        ],
-        "extensions": [
-          ".js",
-          ".jsx"
         ]
       }
     ],
     "codeLensProvider": [
       {
         "language": "typescript",
-        "scheme": "file",
-        "command": {
-          "command": "extension.openUrl",
-          "title": "Open URL",
-          "arguments": []
-        }
-      },
-      {
-        "language": "javascript",
         "scheme": "file",
         "command": {
           "command": "extension.openUrl",
@@ -189,6 +168,10 @@
         "title": "Generate Remix Route"
       },
       {
+        "command": "remix-forge.openUrl",
+        "title": "Opens url in browser"
+      },
+      {
         "command": "remix-forge.flattenRoutes",
         "title": "Convert routes to v2 convention"
       }
@@ -224,7 +207,7 @@
     "url": "https://github.com/Code-Forge-Net/Remix-Forge"
   },
   "devDependencies": {
-    "@types/vscode": "^1.77.0",
+    "@types/vscode": "^1.78.0",
     "@types/glob": "^8.1.0",
     "@types/mocha": "^10.0.1",
     "@types/node": "16.x",
