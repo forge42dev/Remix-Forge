@@ -29,3 +29,15 @@ export const commandWithLoading = async (title: string, action: (...args: any[])
     }
   );
 };
+
+export async function getPackageJson() {
+  const workspaceFolders = vscode.workspace.workspaceFolders;
+  if (!workspaceFolders || workspaceFolders.length === 0) {
+    return undefined; // No workspace folders found
+  }
+
+  const workspaceFolderPath = workspaceFolders[0].uri.fsPath;
+  const packageJsonPath = vscode.Uri.joinPath(vscode.Uri.file(workspaceFolderPath), "package.json").fsPath;
+  const packageJson = await vscode.workspace.fs.readFile(vscode.Uri.file(packageJsonPath));
+  return packageJson.toString();
+}

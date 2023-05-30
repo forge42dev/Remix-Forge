@@ -1,8 +1,8 @@
 {
   "name": "remix-forge",
   "displayName": "Remix Forge",
-  "description": "Remix generator for route files to help you generate your routes faster.",
-  "version": "0.0.4",
+  "description": "Remix Forge - A VS Code extension for Remix.run applications that super charges your development with a ever-growing set of functionalities.",
+  "version": "0.0.5",
   "icon": "./remix-logo.png",
   "publisher": "CodeForge",
   "engines": {
@@ -15,9 +15,80 @@
   "activationEvents": [],
   "main": "./dist/extension.js",
   "contributes": {
+    "languages": [
+      {
+        "id": "typescript",
+        "aliases": [
+          "Typescript",
+          "typescript"
+        ],
+        "extensions": [
+          ".ts",
+          ".tsx"
+        ]
+      },
+      {
+        "id": "javascript",
+        "aliases": [
+          "Javascript",
+          "javascript"
+        ],
+        "extensions": [
+          ".js",
+          ".jsx"
+        ]
+      }
+    ],
+    "codeLensProvider": [
+      {
+        "language": "typescript",
+        "scheme": "file",
+        "command": {
+          "command": "extension.openUrl",
+          "title": "Open URL",
+          "arguments": []
+        }
+      },
+      {
+        "language": "javascript",
+        "scheme": "file",
+        "command": {
+          "command": "extension.openUrl",
+          "title": "Open URL",
+          "arguments": []
+        }
+      }
+    ],
     "configuration": {
       "title": "Remix Forge",
       "properties": {
+        "remix-forge.urlGenerator": {
+          "type": "string",
+          "default": "",
+          "description": "Pass in a custom function to be used to generate the relative part of the URL for the code lens. The function will receive the current path of the component as the first argument. eg: (filePath) => `something` will return `localhost:3000/something` as the URL."
+        },
+        "remix-forge.urlGeneratorPaths": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string",
+                "description": "Title to display above the component eg: Staging => Open Staging URL"
+              },
+              "url": {
+                "type": "string",
+                "description": "URL of your site eg: http://staging.dev.site"
+              }
+            }
+          },
+          "default": [
+            {
+              "title": "Local",
+              "url": "http://localhost:3000"
+            }
+          ]
+        },
         "remix-forge.preselected": {
           "type": "array",
           "enum": [

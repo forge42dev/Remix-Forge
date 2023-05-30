@@ -1,16 +1,23 @@
 # Remix Forge
 
-Remix Forge - A VS Code extension for generating route files for Remix.run applications.
+Remix Forge - A VS Code extension for Remix.run applications that super charges your development with a ever-growing set of functionalities.
 
 ## Whats new?
-
+- Added ability to open up your routes in the browser from the route file itself.
 - Added ability to convert v1 route convention to v2 route convention
 - Added ability to change runtime dependencies
 
 ## Features
 
+### Opening routes in the browser
+You can now open up your routes in the browser from the route file itself. This is useful for when you want to test out your routes without having to go to the browser and type in the url or navigate to it.
+
+Each route file with the default export will have a button(s) above the default export that will open up the route in the browser by clicking it.
+
+This is configurable and you can change the url generator function and the paths that you want to generate urls for. See the [Extension Settings](#extension-settings) section on how you can customize your output
+
 ### Route File Generation
-Generates every possible export from a route file for Remix.run applications.
+Generates every possible export from a route file for Remix.run applications. You can do this by right-clicking your routes folder and selecting convert to v2 convention.
 Including:
 - `dependencies`
 - `loader function`
@@ -56,17 +63,26 @@ This extension contributes the following configuration settings:
 * `remix-forge.revalidate`: Allows you to change the output for the revalidate segment of the code (`default is ''`).
 * `remix-forge.headers`: Allows you to change the output for the headers segment of the code (`default is ''`).
 * `remix-forge.runtimeDependency`: Allows you to change the output for the runtime dependencies (`default is ''`).
+* `remix-forge.urlGenerator`: Allows you to pass in a custom url generator function for the relative part of the url (`default is ''`).
+* `remix-forge.urlGeneratorPaths`: Allows you to specify multiple url paths to generate urls for (eg. staging, production, local...) (`default is [{ title: "Local", url: "http://localhost:3000" }]`).
 
 ## Roadmap
 
 - [x] Add ability to convert v1 route convention to v2 route convention
 - [x] Add ability to change runtime dependencies
+- [x] Add ability to open up your routes in the browser from the file itself.
 - [ ] Add ability for the extension to sniff out the runtime dependency instead of you configuring it
 - [ ] Add ability to generate a component name based on the route name
 - [ ] Add ability to generate fully progressive forms with validation
 - [ ] Add ability to generate authenticated routes via actions
 
 ## Release Notes 
+
+##  0.0.5
+
+- Ability to open up routes in the browser from the file via the buttons above the default export
+- `urlGenerator` config option that allows you to pass in a custom function to generate your urls
+- `urlGeneratorPaths` config option that allows you to specify multiple url paths to generate urls for (eg. staging, production, local...)
 
 ### 0.0.4
 

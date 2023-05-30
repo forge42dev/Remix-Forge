@@ -3,6 +3,12 @@
 
 All notable changes to the "remix-forge" extension will be documented in this file. 
 
+## [0.0.5]
+### Added
+- Ability to open up routes in the browser from the file via the button above the default export
+- `urlGenerator` config option that allows you to pass in a custom function to generate your urls
+- `urlGeneratorPaths` config option that allows you to specify multiple url paths to generate urls for (eg. staging, production, local...)
+
 ## [0.0.4]
 
 ### Added
