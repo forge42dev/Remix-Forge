@@ -32,7 +32,7 @@
         "language": "typescript",
         "scheme": "file",
         "command": {
-          "command": "extension.openUrl",
+          "command": "remix-forge.openUrl",
           "title": "Open URL",
           "arguments": []
         }
