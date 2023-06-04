@@ -61,10 +61,6 @@ feel free to submit an issue on our Github repository.
 
 ## Usage
 
-## Generating authentication flows
-Here is an example video of the basic usage:
-<video src="https://raw.githubusercontent.com/Code-Forge-Net/Remix-Forge/main/auth-demo.mp4" controls="controls" style="max-width: 730px;">
-</video>
 
 ## Generating routes
 Here is an example video of the basic usage:
