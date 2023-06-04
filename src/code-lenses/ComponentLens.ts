@@ -20,10 +20,10 @@ export class ComponentLens implements vscode.CodeLensProvider {
    * @returns Returns the converted chunk
    */
   convertRemixPathToUrl(chunk: string) {
-    if (chunk.startsWith("__") || chunk.startsWith("_") || chunk.includes("index")) {
+    if (chunk.startsWith("__") || chunk.startsWith("_") || chunk.includes("index") || chunk.includes("route")) {
       return "";
     }
-    return chunk.replace(/_/g, "").replace(/\[/g, ":").replace(/\]/g, "");
+    return chunk.replace(/_/g, "").replace(/\[/g, ":").replace(/\]/g, "").replace("+", "");
   }
   /**
    * Method to generate the final path to open in browser
