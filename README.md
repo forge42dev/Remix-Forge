@@ -3,11 +3,30 @@
 Remix Forge - A VS Code extension for Remix.run applications that super charges your development with a ever-growing set of functionalities.
 
 ## Whats new?
-- Added ability to open up your routes in the browser from the route file itself.
-- Added ability to convert v1 route convention to v2 route convention
-- Added ability to change runtime dependencies
+- Added ability to generate the whole authentication scaffolding for Remix applications with a single click
+- Added ability to add authentication to your loaders with a click
+- Added ability to add authentication to your actions with a click
 
 ## Features
+
+### Generating authentication flows
+You can now generate the whole authentication scaffolding for Remix applications with a single click. This includes:
+- `auth0`
+- `facebook`
+- `github`
+- `google`
+- `microsoft`
+- `discord`
+- `twitter`
+- `oauth2`
+- `form` (email/password)
+
+`Right click` the `app` folder and select `Generate Authentication Workflow` and select the authentication method(s) you want to use. 
+After that fill the required secrets inside of the `.env` file and you are good to go.
+
+### Generating authentication for loaders and actions
+You can now add authentication to your loaders and actions with a click.
+`Click` the `Add authentication` above a loader or action and it will auto generate the authentication using remix-auth.
 
 ### Opening routes in the browser
 You can now open up your routes in the browser from the route file itself. This is useful for when you want to test out your routes without having to go to the browser and type in the url or navigate to it.
@@ -42,6 +61,12 @@ feel free to submit an issue on our Github repository.
 
 ## Usage
 
+## Generating authentication flows
+Here is an example video of the basic usage:
+<video src="https://raw.githubusercontent.com/Code-Forge-Net/Remix-Forge/main/auth-demo.mp4" controls="controls" style="max-width: 730px;">
+</video>
+
+## Generating routes
 Here is an example video of the basic usage:
 
 <video src="https://raw.githubusercontent.com/Code-Forge-Net/Remix-Forge/main/basic-demo.mp4" controls="controls" style="max-width: 730px;">
@@ -77,6 +102,12 @@ This extension contributes the following configuration settings:
 - [ ] Add ability to generate authenticated routes via actions
 
 ## Release Notes 
+
+## 0.1.0 
+- Ability to generate the whole authentication scaffolding for Remix applications with a single click
+- Ability to add authentication to your loaders with a click
+- Ability to add authentication to your actions with a click
+- Support for 9 Authentication methods including Facebook, Google, Auth0, Microsoft, Github, Discord and more...
 
 ##  0.0.5
 

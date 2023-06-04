@@ -4,7 +4,7 @@ interface ConfigPath {
   title: string;
   url: string;
 }
-export class MyCodeLensProvider implements vscode.CodeLensProvider {
+export class ComponentLens implements vscode.CodeLensProvider {
   /**
    * Helper method used to sanitize the path
    * @param path Path to sanitize
@@ -57,14 +57,14 @@ export class MyCodeLensProvider implements vscode.CodeLensProvider {
 
   provideCodeLenses(
     document: vscode.TextDocument,
-      token: vscode.CancellationToken  
+    token: vscode.CancellationToken
   ): vscode.ProviderResult<vscode.CodeLens[]> {
     const codeLenses: vscode.CodeLens[] = [];
     const config = vscode.workspace.getConfiguration("remix-forge");
     const urlGenerator = config.get<string>("urlGenerator");
-    const paths = config.get<ConfigPath[]>("urlGeneratorPaths"); 
+    const paths = config.get<ConfigPath[]>("urlGeneratorPaths");
     // Define the regular expression pattern to match the function signature
-    const functionPattern = /export\s+default\s+function\s+(\w+)/g; 
+    const functionPattern = /export\s+default\s+function\s+(\w+)/g;
     // Iterate over the document's text lines and look for matches
     for (let lineIndex = 0; lineIndex < document.lineCount; lineIndex++) {
       const line = document.lineAt(lineIndex);

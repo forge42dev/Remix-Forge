@@ -1,0 +1,27 @@
+export const generateTwitterStrategy = () => {
+  return [
+    "// Refer to https://github.com/na2hiro/remix-auth-twitter for more information",
+    'import { AuthStrategies } from "~/services/auth.server";',
+    'import type { User } from "~/services/auth.server";',
+    'import { TwitterStrategy } from "remix-auth-twitter";',
+    "",
+    "const clientID = process.env.TWITTER_CLIENT_ID;",
+    "const clientSecret = process.env.TWITTER_CLIENT_SECRET;",
+    "",
+    "if (!clientID || !clientSecret) {",
+    '  throw new Error("Missing TWITTER_CLIENT_ID or TWITTER_CLIENT_SECRET");',
+    "}",
+    "",
+    "export const twitterStrategy = new TwitterStrategy<User>({",
+    "  clientID,",
+    "  clientSecret,",
+    "  callbackURL: `${process.env.APP_URL}/auth/${AuthStrategies.TWITTER}/callback`,",
+    "  includeEmail: true",
+    "},",
+    "async ({ accessToken, accessTokenSecret, profile }) => {",
+    "  // Do something with the tokens and profile",
+    "  return {};",
+    "}",
+    ");",
+  ].join("\n");
+};

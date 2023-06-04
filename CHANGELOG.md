@@ -3,6 +3,13 @@
 
 All notable changes to the "remix-forge" extension will be documented in this file. 
 
+## [0.1.0]
+### Added
+- Ability to generate the whole authentication scaffolding for Remix applications with a single click
+- Ability to add authentication to your loaders with a click
+- Ability to add authentication to your actions with a click
+- Support for 9 Authentication methods including Facebook, Google, Auth0, Microsoft, Github, Discord and more...
+
 ## [0.0.5]
 ### Added
 - Ability to open up routes in the browser from the file via the button above the default export

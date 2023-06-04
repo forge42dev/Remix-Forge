@@ -1,7 +1,7 @@
 import { WorkspaceConfiguration } from "vscode";
 
 export const generateDependencies = (config: WorkspaceConfiguration, selectedGenerators: string[]) => {
-  const runtimeDependency = config.get("runtimeDependency");
+  const runtimeDependency = config.get("runtimeDependency") || "@remix-run/node";
   const reactDeps = [];
   const remixDeps = [];
   const reactTypeDeps = [];

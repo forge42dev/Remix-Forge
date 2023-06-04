@@ -2,7 +2,7 @@
   "name": "remix-forge",
   "displayName": "Remix Forge",
   "description": "Remix Forge - A VS Code extension for Remix.run applications that super charges your development with a ever-growing set of functionalities.",
-  "version": "0.0.7",
+  "version": "0.1.0",
   "icon": "./remix-logo.png",
   "publisher": "CodeForge",
   "engines": {
@@ -169,8 +169,16 @@
         "title": "Generate Remix Route"
       },
       {
+        "command": "remix-forge.generateAuth",
+        "title": "Generate Authentication Workflow"
+      },
+      {
         "command": "remix-forge.openUrl",
         "title": "Opens url in browser"
+      },
+      {
+        "command": "remix-forge.generateAuthSnippet",
+        "title": "Generates authentication for loaders/actions"
       },
       {
         "command": "remix-forge.flattenRoutes",
@@ -188,6 +196,11 @@
           "command": "remix-forge.flattenRoutes",
           "when": "explorerResourceIsFolder && resourceFilename =~ /routes/",
           "group": "2_Remix@2"
+        },
+        {
+          "command": "remix-forge.generateAuth",
+          "when": "explorerResourceIsFolder && resourceFilename =~ /app/",
+          "group": "2_Remix@3"
         }
       ]
     }

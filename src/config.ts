@@ -16,4 +16,9 @@ export const defaultGenerationOrder: Exclude<Generator, "dependencies">[] = [
   "errorBoundary",
   "revalidate",
 ];
+
+export const getConfig = () => {
+  return vscode.workspace.getConfiguration(EXTENSION_CONFIG_SECTION);
+};
+
 export { config };
