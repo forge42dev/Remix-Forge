@@ -92,10 +92,10 @@ This extension contributes the following configuration settings:
 - [x] Add ability to convert v1 route convention to v2 route convention
 - [x] Add ability to change runtime dependencies
 - [x] Add ability to open up your routes in the browser from the file itself.
+- [x] Add ability to generate authenticated routes via actions and loaders
 - [ ] Add ability for the extension to sniff out the runtime dependency instead of you configuring it
 - [ ] Add ability to generate a component name based on the route name
 - [ ] Add ability to generate fully progressive forms with validation
-- [ ] Add ability to generate authenticated routes via actions
 
 ## Release Notes 
 
