@@ -3,6 +3,10 @@
 
 All notable changes to the "remix-forge" extension will be documented in this file. 
 
+## [0.1.1]
+### Added
+- Better support for opening up routes in the browser that use the remix-flat-routes convention
+
 ## [0.1.0]
 ### Added
 - Ability to generate the whole authentication scaffolding for Remix applications with a single click

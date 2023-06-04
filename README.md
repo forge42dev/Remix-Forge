@@ -99,6 +99,9 @@ This extension contributes the following configuration settings:
 
 ## Release Notes 
 
+## 0.1.1
+- Better support for opening up routes in the browser that use the remix-flat-routes convention
+
 ## 0.1.0 
 - Ability to generate the whole authentication scaffolding for Remix applications with a single click
 - Ability to add authentication to your loaders with a click
