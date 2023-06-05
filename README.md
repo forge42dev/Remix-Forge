@@ -99,6 +99,12 @@ This extension contributes the following configuration settings:
 
 ## Release Notes 
 
+## 0.1.3
+- Issue with generate Authentication command
+
+## 0.1.2
+- Issue with no .env present in the project when generating auth flow
+
 ## 0.1.1
 - Better support for opening up routes in the browser that use the remix-flat-routes convention
 

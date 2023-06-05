@@ -3,6 +3,10 @@
 
 All notable changes to the "remix-forge" extension will be documented in this file. 
 
+## [0.1.3]
+### Fixed
+- Issue with generate Authentication command
+
 ## [0.1.2]
 ### Fixed
 - Issue with no .env present in the project when generating auth flow

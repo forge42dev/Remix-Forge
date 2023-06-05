@@ -21,7 +21,7 @@ export const generateAuthSnippet = async (uri: vscode.Uri, type: "action" | "loa
     if (line.includes("import") && line.includes("authenticator")) {
       authLineExists = true;
     }
-    if (line.includes(type)) {
+    if (line.includes(`export const ${type}`)) {
       if (!line.includes("async")) {
         lineOutput = lineOutput.replace("=", `= async`);
       }
