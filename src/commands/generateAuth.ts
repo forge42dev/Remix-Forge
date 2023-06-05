@@ -21,7 +21,7 @@ export const generateAuth = async (uri: vscode.Uri) => {
   if (!options) return;
 
   const servicesFolder = vscode.Uri.joinPath(uri, "services");
-  const config = await getConfig();
+  const config = getConfig();
   await vscode.workspace.fs.createDirectory(servicesFolder);
 
   const sessionFile = vscode.Uri.joinPath(servicesFolder, "session.server.ts");
@@ -31,7 +31,10 @@ export const generateAuth = async (uri: vscode.Uri) => {
   const projectRoot = vscode.workspace.getWorkspaceFolder(uri);
   const projectRootUri = projectRoot?.uri;
   const envFile = vscode.Uri.joinPath(projectRootUri!, ".env");
-  const envFileContent = await vscode.workspace.fs.readFile(envFile);
+  let envFileContent: string | Uint8Array = "";
+  try {
+    envFileContent = await vscode.workspace.fs.readFile(envFile);
+  } catch (err) {}
   const routesFolder = vscode.Uri.joinPath(uri, "routes");
   const authRouteFile = vscode.Uri.joinPath(routesFolder, "auth.tsx");
   const authProviderFile = vscode.Uri.joinPath(routesFolder, "auth.$provider.tsx");

@@ -3,6 +3,10 @@
 
 All notable changes to the "remix-forge" extension will be documented in this file. 
 
+## [0.1.2]
+### Fixed
+- Issue with no .env present in the project when generating auth flow
+
 ## [0.1.1]
 ### Added
 - Better support for opening up routes in the browser that use the remix-flat-routes convention
