@@ -3,6 +3,15 @@
 
 All notable changes to the "remix-forge" extension will be documented in this file. 
 
+## [0.1.4]
+### Added
+- Barrelize command that allows you to generate a barrel file for a folder with a single click
+- `remix-forge.importAuthFrom` - Change the import statement for the Add authentication command (`default is '', this will set it to "~/services/auth.server"`).
+- `remix-forge.barrelizeRemoveExtensions` - When using the Barrelize command removes the following extensions from the generated barrel file (`default is ['.ts', '.tsx', '.js', '.jsx'] => export - from "./Component(removes the .tsx)`).
+- `remix-forge.barrelizeIndexExtension` - Set the generated index file extension (`default is 'ts' => index.ts`).
+- `remix-forge.barrelizeIgnoreFiles` - Ignores the files that include any of the provided strings (`default is ['index', 'test', 'stories]`).
+
+
 ## [0.1.3]
 ### Fixed
 - Issue with generate Authentication command

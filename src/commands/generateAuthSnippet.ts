@@ -10,7 +10,7 @@ export const generateAuthSnippet = async (uri: vscode.Uri, type: "action" | "loa
   const output: string[] = [];
   const config = getConfig();
   const runtimeDependency = config.get<string>("runtimeDependency") || "@remix-run/node";
-
+  const importAuthFrom = config.get<string>("importAuthFrom") || "~/services/auth.server";
   let dependencyLineExists = false;
   let authLineExists = false;
   lines.forEach((line, i) => {
@@ -59,7 +59,7 @@ export const generateAuthSnippet = async (uri: vscode.Uri, type: "action" | "loa
     output.unshift(`import type { ${uppercaseFirstLetter(type)}Args } from "${runtimeDependency}";`);
   }
   if (!authLineExists) {
-    output.unshift(`import { authenticator } from "~/services/auth.server";`);
+    output.unshift(`import { authenticator } from "${importAuthFrom}";`);
   }
   const finalOutput = shouldAddTypeImport
     ? output.map((line) => {

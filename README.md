@@ -3,6 +3,7 @@
 Remix Forge - A VS Code extension for Remix.run applications that super charges your development with a ever-growing set of functionalities.
 
 ## Whats new?
+- Added ability to generate barrel files for a folder with a single click
 - Added ability to generate the whole authentication scaffolding for Remix applications with a single click
 - Added ability to add authentication to your loaders with a click
 - Added ability to add authentication to your actions with a click
@@ -27,6 +28,8 @@ After that fill the required secrets inside of the `.env` file and you are good 
 ### Generating authentication for loaders and actions
 You can now add authentication to your loaders and actions with a click.
 `Click` the `Add authentication` above a loader or action and it will auto generate the authentication using remix-auth.
+
+This is configurable and you can change the import statement to reflect your authenticator location. See the [Extension Settings](#extension-settings) section on how you can customize your output
 
 ### Opening routes in the browser
 You can now open up your routes in the browser from the route file itself. This is useful for when you want to test out your routes without having to go to the browser and type in the url or navigate to it.
@@ -59,13 +62,33 @@ This command will try to convert your routes from v1 to v2 and if anything goes 
 Just in case PLEASE make sure you have a backup in case something unexpected happens or you find a bug. In case of a bug
 feel free to submit an issue on our Github repository.
 
+### Barrelize
+
+Barrelize your folders with a click. This will generate a barrel file for the selected folder and will export all the files inside of it. This will be done recursively for all the subfolders as well.
+
+This is useful for when you want to import a lot of imports from a directory and you don't want to import each file individually.
+
+> Tip: See the [Extension Settings](#extension-settings) section on how you can customize your output
+
 ## Usage
 
+
+## Authentication flow
+Here is an example video of the basic usage:
+
+<video src="https://raw.githubusercontent.com/Code-Forge-Net/Remix-Forge/main/auth-demo.mp4" controls="controls" style="max-width: 730px;">
+</video>
 
 ## Generating routes
 Here is an example video of the basic usage:
 
 <video src="https://raw.githubusercontent.com/Code-Forge-Net/Remix-Forge/main/basic-demo.mp4" controls="controls" style="max-width: 730px;">
+</video>
+
+## Barrelizing folders
+Here is an example video of the basic usage:
+
+<video src="https://raw.githubusercontent.com/Code-Forge-Net/Remix-Forge/main/barrel-demo.mp4" controls="controls" style="max-width: 730px;">
 </video>
 
 ## Extension Settings 
@@ -86,6 +109,10 @@ This extension contributes the following configuration settings:
 * `remix-forge.runtimeDependency`: Allows you to change the output for the runtime dependencies (`default is ''`).
 * `remix-forge.urlGenerator`: Allows you to pass in a custom url generator function for the relative part of the url (`default is ''`).
 * `remix-forge.urlGeneratorPaths`: Allows you to specify multiple url paths to generate urls for (eg. staging, production, local...) (`default is [{ title: "Local", url: "http://localhost:3000" }]`).
+* `remix-forge.importAuthFrom` - Change the import statement for the Add authentication command (`default is '', this will set it to "~/services/auth.server"`).
+* `remix-forge.barrelizeRemoveExtensions` - When using the Barrelize command removes the following extensions from the generated barrel file (`default is ['.ts', '.tsx', '.js', '.jsx'] => export * from "./Component(removes the .tsx)`).
+* `remix-forge.barrelizeIndexExtension` - Set the generated index file extension (`default is 'ts' => index.ts`).
+* `remix-forge.barrelizeIgnoreFiles` - Ignores the files that include any of the provided strings (`default is ['index', 'test', 'stories]`).
 
 ## Roadmap
 
@@ -93,11 +120,19 @@ This extension contributes the following configuration settings:
 - [x] Add ability to change runtime dependencies
 - [x] Add ability to open up your routes in the browser from the file itself.
 - [x] Add ability to generate authenticated routes via actions and loaders
+- [x] Add ability to barrelize folders
 - [ ] Add ability for the extension to sniff out the runtime dependency instead of you configuring it
 - [ ] Add ability to generate a component name based on the route name
 - [ ] Add ability to generate fully progressive forms with validation
 
 ## Release Notes 
+
+## 0.1.4
+- Added ability to barrelize folders
+- `importAuthFrom` configuration option added
+- `barrelizeRemoveExtensions` configuration option added
+- `barrelizeIndexExtension` configuration option added
+- `barrelizeIgnoreFiles` configuration option added
 
 ## 0.1.3
 - Issue with generate Authentication command

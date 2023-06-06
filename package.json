@@ -2,8 +2,16 @@
   "name": "remix-forge",
   "displayName": "Remix Forge",
   "description": "Remix Forge - A VS Code extension for Remix.run applications that super charges your development with a ever-growing set of functionalities.",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "icon": "./remix-logo.png",
+  "keywords": [
+    "Remix",
+    "remix-auth",
+    "Generator",
+    "Typescript",
+    "React",
+    "Snippets"
+  ],
   "publisher": "CodeForge",
   "engines": {
     "vscode": "^1.78.0"
@@ -160,6 +168,41 @@
           "default": "",
           "description": "Remix headers code to generate instead of the default one. Leave empty to use the default headers.",
           "editPresentation": "multilineText"
+        },
+        "remix-forge.importAuthFrom": {
+          "type": "string",
+          "default": "",
+          "description": "Generate the auth import from this path. Leave empty to use the default one (~/services/auth.server)."
+        },
+        "remix-forge.barrelizeRemoveExtensions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "tsx",
+            "ts",
+            "jsx",
+            "js"
+          ],
+          "description": "Tell the barrelize command to remove these extensions when generating the barrel file."
+        },
+        "remix-forge.barrelizeIndexExtension": {
+          "type": "string",
+          "default": "ts",
+          "description": "Tell the barrelize command what extension to use for the index file."
+        },
+        "remix-forge.barrelizeIgnoreFiles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "index",
+            "test",
+            "stories"
+          ],
+          "description": "Tell the barrelize command to ignore all the files containing the strings provided."
         }
       }
     },
@@ -175,6 +218,10 @@
       {
         "command": "remix-forge.openUrl",
         "title": "Opens url in browser"
+      },
+      {
+        "command": "remix-forge.barrelize",
+        "title": "Barrelize folder"
       },
       {
         "command": "remix-forge.generateAuthSnippet",
@@ -201,6 +248,11 @@
           "command": "remix-forge.generateAuth",
           "when": "explorerResourceIsFolder && resourceFilename =~ /app/",
           "group": "2_Remix@3"
+        },
+        {
+          "command": "remix-forge.barrelize",
+          "when": "explorerResourceIsFolder",
+          "group": "2_Remix@4"
         }
       ]
     }
