@@ -3,12 +3,18 @@
 Remix Forge - A VS Code extension for Remix.run applications that super charges your development with a ever-growing set of functionalities.
 
 ## Whats new?
+- Added ability to generate progressively enhanced form routes with a single click
 - Added ability to generate barrel files for a folder with a single click
-- Added ability to generate the whole authentication scaffolding for Remix applications with a single click
-- Added ability to add authentication to your loaders with a click
-- Added ability to add authentication to your actions with a click
+- Added ability to generate the whole authentication scaffolding for Remix applications with a single click 
 
 ## Features
+
+### Generate Progressively Enhanced Form Routes with zod validation
+You can now generate progressively enhanced form routes with a single click. You can either generate progressive forms with:
+- `remix-hook-form` - React-hook-form wrapper for Remix.run applications
+- `Conform` - Progressively enhanced form generation library
+
+Click on the `routes` folder or anywhere inside of it and select `Generate Remix Form Route` and it will be generated for you.
 
 ### Generating authentication flows
 You can now generate the whole authentication scaffolding for Remix applications with a single click. This includes:
@@ -73,6 +79,12 @@ This is useful for when you want to import a lot of imports from a directory and
 ## Usage
 
 
+## Progressive Form routes
+Here is an example video of the basic usage:
+
+<video src="https://raw.githubusercontent.com/Code-Forge-Net/Remix-Forge/main/form-demo.mp4" controls="controls" style="max-width: 730px;">
+</video>
+
 ## Authentication flow
 Here is an example video of the basic usage:
 
@@ -113,6 +125,7 @@ This extension contributes the following configuration settings:
 * `remix-forge.barrelizeRemoveExtensions` - When using the Barrelize command removes the following extensions from the generated barrel file (`default is ['.ts', '.tsx', '.js', '.jsx'] => export * from "./Component(removes the .tsx)`).
 * `remix-forge.barrelizeIndexExtension` - Set the generated index file extension (`default is 'ts' => index.ts`).
 * `remix-forge.barrelizeIgnoreFiles` - Ignores the files that include any of the provided strings (`default is ['index', 'test', 'stories]`).
+* `remix-forge.formHandler` - Choose between remix-hook-form or conform for your forms (`default is remix-hook-form`).
 
 ## Roadmap
 
@@ -121,12 +134,17 @@ This extension contributes the following configuration settings:
 - [x] Add ability to open up your routes in the browser from the file itself.
 - [x] Add ability to generate authenticated routes via actions and loaders
 - [x] Add ability to barrelize folders
+- [x] Add ability to generate fully progressive forms with validation
 - [ ] Add ability for the extension to sniff out the runtime dependency instead of you configuring it
 - [ ] Add ability to generate a component name based on the route name
-- [ ] Add ability to generate fully progressive forms with validation
 
 ## Release Notes 
 
+## 0.1.5
+- `remix-forge.formHandler` - Choose between remix-hook-form or conform for your forms (`default is remix-hook-form`).
+- Ability to generate fully progressive forms with validation
+- If Remix Forge generates code with dependencies you don't have installed it will prompt you to install them
+ 
 ## 0.1.4
 - Added ability to barrelize folders
 - `importAuthFrom` configuration option added

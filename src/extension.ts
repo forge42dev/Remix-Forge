@@ -1,13 +1,16 @@
 import * as vscode from "vscode";
-import { flattenRoutes } from "./commands/flattenRoutes";
-import { generateRouteFile } from "./commands/generateRouteFile";
+import {
+  flattenRoutes,
+  generateRouteFile,
+  openUrl,
+  generateAuth,
+  generateAuthSnippet,
+  barrelize,
+  generateRemixFormRoute,
+} from "./commands";
 import { ComponentLens } from "./code-lenses/ComponentLens";
-import { openUrl } from "./commands/openUrl";
-import { generateAuth } from "./commands/generateAuth";
 import { LoaderLens } from "./code-lenses/LoaderLens";
 import { ActionLens } from "./code-lenses/ActionLens";
-import { generateAuthSnippet } from "./commands/generateAuthSnippet";
-import { barrelize } from "./commands/barrelize";
 
 export function activate(context: vscode.ExtensionContext) {
   const flattenRoutesCommand = vscode.commands.registerCommand("remix-forge.flattenRoutes", flattenRoutes);
@@ -15,6 +18,10 @@ export function activate(context: vscode.ExtensionContext) {
   const generateAuthCommand = vscode.commands.registerCommand("remix-forge.generateAuth", generateAuth);
   const openUrlCommand = vscode.commands.registerCommand("remix-forge.openUrl", openUrl);
   const barrelizeCommand = vscode.commands.registerCommand("remix-forge.barrelize", barrelize);
+  const generateRemixFormRouteCommand = vscode.commands.registerCommand(
+    "remix-forge.generateRemixFormRoute",
+    generateRemixFormRoute
+  );
   const generateAuthSnippetCommand = vscode.commands.registerCommand(
     "remix-forge.generateAuthSnippet",
     generateAuthSnippet
@@ -37,7 +44,8 @@ export function activate(context: vscode.ExtensionContext) {
     openUrlCommand,
     generateAuthCommand,
     generateAuthSnippetCommand,
-    barrelizeCommand
+    barrelizeCommand,
+    generateRemixFormRouteCommand
   );
 }
 

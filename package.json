@@ -2,7 +2,7 @@
   "name": "remix-forge",
   "displayName": "Remix Forge",
   "description": "Remix Forge - A VS Code extension for Remix.run applications that super charges your development with a ever-growing set of functionalities.",
-  "version": "0.1.4",
+  "version": "0.1.6",
   "icon": "./remix-logo.png",
   "keywords": [
     "Remix",
@@ -10,7 +10,11 @@
     "Generator",
     "Typescript",
     "React",
-    "Snippets"
+    "Snippets",
+    "conform",
+    "form-handling",
+    "remix-hook-form",
+    "form-generator"
   ],
   "publisher": "CodeForge",
   "engines": {
@@ -53,7 +57,8 @@
         "remix-forge.urlGenerator": {
           "type": "string",
           "default": "",
-          "description": "Pass in a custom function to be used to generate the relative part of the URL for the code lens. The function will receive the current path of the component as the first argument. eg: (filePath) => `something` will return `localhost:3000/something` as the URL."
+          "description": "Pass in a custom function to be used to generate the relative part of the URL for the code lens. The function will receive the current path of the component as the first argument. eg: (filePath) => `something` will return `localhost:3000/something` as the URL.",
+          "editPresentation": "multilineText"
         },
         "remix-forge.urlGeneratorPaths": {
           "type": "array",
@@ -203,6 +208,15 @@
             "stories"
           ],
           "description": "Tell the barrelize command to ignore all the files containing the strings provided."
+        },
+        "remix-forge.formHandler": {
+          "type": "string",
+          "default": "remix-hook-form",
+          "enum": [
+            "remix-hook-form",
+            "conform"
+          ],
+          "description": "What form handling library you want your project to use by default (remix-hook-form or conform)."
         }
       }
     },
@@ -210,6 +224,10 @@
       {
         "command": "remix-forge.generateRemixRoute",
         "title": "Generate Remix Route"
+      },
+      {
+        "command": "remix-forge.generateRemixFormRoute",
+        "title": "Generate Remix Form Route"
       },
       {
         "command": "remix-forge.generateAuth",
@@ -240,19 +258,24 @@
           "group": "2_Remix@1"
         },
         {
+          "command": "remix-forge.generateRemixFormRoute",
+          "when": "explorerResourceIsFolder",
+          "group": "2_Remix@2"
+        },
+        {
           "command": "remix-forge.flattenRoutes",
           "when": "explorerResourceIsFolder && resourceFilename =~ /routes/",
-          "group": "2_Remix@2"
+          "group": "2_Remix@3"
         },
         {
           "command": "remix-forge.generateAuth",
           "when": "explorerResourceIsFolder && resourceFilename =~ /app/",
-          "group": "2_Remix@3"
+          "group": "2_Remix@4"
         },
         {
           "command": "remix-forge.barrelize",
           "when": "explorerResourceIsFolder",
-          "group": "2_Remix@4"
+          "group": "2_Remix@5"
         }
       ]
     }

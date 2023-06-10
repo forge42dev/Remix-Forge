@@ -3,6 +3,14 @@
 
 All notable changes to the "remix-forge" extension will be documented in this file. 
 
+## [0.1.5]
+### Added
+- `remix-forge.formHandler` - Choose between remix-hook-form or conform for your forms (`default is remix-hook-form`).
+- Ability to generate fully progressive forms with validation
+- If Remix Forge generates code with dependencies you don't have installed it will prompt you to install them
+### Fixed
+- Issue with one of the runtime dependencies of generate auth flow not being dynamic
+
 ## [0.1.4]
 ### Added
 - Barrelize command that allows you to generate a barrel file for a folder with a single click

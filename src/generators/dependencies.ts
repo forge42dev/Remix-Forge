@@ -35,9 +35,7 @@ export const generateDependencies = (config: WorkspaceConfiguration, selectedGen
     output.push(`import type { ${metaDeps.join(", ")} } from "@remix-run/react/dist/routeModules";`);
   }
   if (remixDeps.length) {
-    output.push(
-      `import type { ${remixDeps.join(", ")} } from "${runtimeDependency ? runtimeDependency : "@remix-run/node"}";`
-    );
+    output.push(`import type { ${remixDeps.join(", ")} } from "${runtimeDependency}";`);
   }
   if (reactDeps.length) {
     output.push(`import { ${reactDeps.join(", ")} } from "@remix-run/react";`);

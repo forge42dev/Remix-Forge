@@ -11,6 +11,7 @@ import { authRouteFileContent } from "../auth/authFiles/auth";
 import { generateEnvVars } from "../auth/authFiles/env";
 import { dashboardFileContent } from "../auth/authFiles/dashboard";
 import { getConfig } from "../config";
+import { askInstallDependenciesPrompt } from "../utils/vscode";
 
 export const generateAuth = async (uri: vscode.Uri) => {
   const options = await vscode.window.showQuickPick<AUTH_STRATEGY_OPTION>(AUTH_OPTIONS, {
@@ -52,7 +53,7 @@ export const generateAuth = async (uri: vscode.Uri) => {
   await vscode.workspace.fs.writeFile(authCallbackFile, Buffer.from(authProviderCallbackFileContent(config), "utf8"));
   await vscode.workspace.fs.writeFile(loginFile, Buffer.from(loginFileContent(options), "utf8"));
   await vscode.workspace.fs.writeFile(logoutFile, Buffer.from(logoutFileContent(config), "utf8"));
-  await vscode.workspace.fs.writeFile(sessionFile, Buffer.from(sessionFileContent, "utf8"));
+  await vscode.workspace.fs.writeFile(sessionFile, Buffer.from(sessionFileContent(), "utf8"));
 
   const authFile = vscode.Uri.joinPath(servicesFolder, "auth.server.ts");
   const authFileContent = Buffer.from(generateAuthFileContent(options), "utf8");
@@ -64,4 +65,34 @@ export const generateAuth = async (uri: vscode.Uri) => {
     const strategyFileContent = Buffer.from(AUTH_STRATEGIES[option.key], "utf-8");
     await vscode.workspace.fs.writeFile(strategyFile, strategyFileContent);
   }
+
+  const strategyDeps: string[] = [];
+  for (const option of options) {
+    if (
+      option.key === "facebook" ||
+      option.key === "discord" ||
+      (option.key === "microsoft" && !strategyDeps.includes("remix-auth-socials"))
+    ) {
+      strategyDeps.push("remix-auth-socials");
+    }
+    if (option.key === "github") {
+      strategyDeps.push("remix-auth-github");
+    }
+    if (option.key === "google") {
+      strategyDeps.push("remix-auth-google");
+    }
+    if (option.key === "twitter") {
+      strategyDeps.push("remix-auth-twitter");
+    }
+    if (option.key === "oauth2") {
+      strategyDeps.push("remix-auth-oauth2");
+    }
+    if (option.key === "form") {
+      strategyDeps.push("remix-auth-form");
+    }
+    if (option.key === "auth0") {
+      strategyDeps.push("remix-auth-auth0");
+    }
+  }
+  await askInstallDependenciesPrompt(["remix-auth", ...strategyDeps]);
 };
