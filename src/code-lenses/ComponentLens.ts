@@ -63,6 +63,8 @@ export class ComponentLens implements vscode.CodeLensProvider {
     const config = vscode.workspace.getConfiguration("remix-forge");
     const urlGenerator = config.get<string>("urlGenerator");
     const paths = config.get<ConfigPath[]>("urlGeneratorPaths");
+    const debugMode = config.get<boolean>("urlDebug");
+
     // Define the regular expression pattern to match the function signature
     const functionPattern = /export\s+default\s+function\s+(\w+)/g;
     // Iterate over the document's text lines and look for matches
@@ -90,6 +92,17 @@ export class ComponentLens implements vscode.CodeLensProvider {
 
           codeLenses.push(newCodeLens);
         });
+        // Adds a debugger url if the debug mode is enabled
+        if (paths?.length && debugMode) {
+          const finalPath = this.generatePath(paths[0].url, document.uri.path, urlGenerator);
+          const newCodeLens = new vscode.CodeLens(range);
+          newCodeLens.command = {
+            title: `Debug: ${finalPath}`,
+            command: "remix-forge.openUrl",
+            arguments: [finalPath],
+          };
+          codeLenses.push(newCodeLens);
+        }
       }
     }
 

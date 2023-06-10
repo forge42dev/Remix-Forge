@@ -60,6 +60,11 @@
           "description": "Pass in a custom function to be used to generate the relative part of the URL for the code lens. The function will receive the current path of the component as the first argument. eg: (filePath) => `something` will return `localhost:3000/something` as the URL.",
           "editPresentation": "multilineText"
         },
+        "remix-forge.urlDebug": {
+          "type": "boolean",
+          "default": false,
+          "description": "Allows you to debug your custom urlGenerator function by showing the url output it generates in the output panel."
+        },
         "remix-forge.urlGeneratorPaths": {
           "type": "array",
           "items": {
