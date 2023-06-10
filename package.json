@@ -2,7 +2,7 @@
   "name": "remix-forge",
   "displayName": "Remix Forge",
   "description": "Remix Forge - A VS Code extension for Remix.run applications that super charges your development with a ever-growing set of functionalities.",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "icon": "./remix-logo.png",
   "keywords": [
     "Remix",
@@ -226,6 +226,10 @@
         "title": "Generate Remix Route"
       },
       {
+        "command": "remix-forge.updateRemix",
+        "title": "Update Remix Version"
+      },
+      {
         "command": "remix-forge.generateRemixFormRoute",
         "title": "Generate Remix Form Route"
       },
@@ -255,27 +259,32 @@
         {
           "command": "remix-forge.generateRemixRoute",
           "when": "explorerResourceIsFolder",
-          "group": "2_Remix@1"
+          "group": "2_Remix@10"
         },
         {
           "command": "remix-forge.generateRemixFormRoute",
           "when": "explorerResourceIsFolder",
-          "group": "2_Remix@2"
+          "group": "2_Remix@20"
         },
         {
           "command": "remix-forge.flattenRoutes",
           "when": "explorerResourceIsFolder && resourceFilename =~ /routes/",
-          "group": "2_Remix@3"
+          "group": "2_Remix@30"
         },
         {
           "command": "remix-forge.generateAuth",
           "when": "explorerResourceIsFolder && resourceFilename =~ /app/",
-          "group": "2_Remix@4"
+          "group": "2_Remix@40"
+        },
+        {
+          "command": "remix-forge.updateRemix",
+          "when": " resourceFilename =~ /package.json/",
+          "group": "2_Remix@50"
         },
         {
           "command": "remix-forge.barrelize",
           "when": "explorerResourceIsFolder",
-          "group": "2_Remix@5"
+          "group": "2_Remix@60"
         }
       ]
     }

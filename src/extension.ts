@@ -7,6 +7,7 @@ import {
   generateAuthSnippet,
   barrelize,
   generateRemixFormRoute,
+  updateRemix,
 } from "./commands";
 import { ComponentLens } from "./code-lenses/ComponentLens";
 import { LoaderLens } from "./code-lenses/LoaderLens";
@@ -18,6 +19,7 @@ export function activate(context: vscode.ExtensionContext) {
   const generateAuthCommand = vscode.commands.registerCommand("remix-forge.generateAuth", generateAuth);
   const openUrlCommand = vscode.commands.registerCommand("remix-forge.openUrl", openUrl);
   const barrelizeCommand = vscode.commands.registerCommand("remix-forge.barrelize", barrelize);
+  const updateRemixCommand = vscode.commands.registerCommand("remix-forge.updateRemix", updateRemix);
   const generateRemixFormRouteCommand = vscode.commands.registerCommand(
     "remix-forge.generateRemixFormRoute",
     generateRemixFormRoute
@@ -45,6 +47,7 @@ export function activate(context: vscode.ExtensionContext) {
     generateAuthCommand,
     generateAuthSnippetCommand,
     barrelizeCommand,
+    updateRemixCommand,
     generateRemixFormRouteCommand
   );
 }

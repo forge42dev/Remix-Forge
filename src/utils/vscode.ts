@@ -29,6 +29,7 @@ export const commandWithLoading = async (title: string, action: (...args: any[])
       progress.report({ increment: 100, message: "" });
     }
   );
+  await vscode.window.showInformationMessage(`${title} finished!`);
 };
 const getWorkspacePath = () => {
   const workspaceFolders = vscode.workspace.workspaceFolders;
@@ -105,23 +106,35 @@ export const installDependencies = async (depsToInstall: string[]) => {
   if (!pkg) {
     return;
   }
-  await commandWithLoading("Installing dependencies...", async () => {
-    // Run npm install command
-    return new Promise((resolve, reject) => {
-      exec(
-        `${packageManager} ${packageManager !== "npm" ? "add" : "install"} ${depsToInstall.join(" ")}`,
-        { cwd: getWorkspacePath() },
-        (error, stdout, stderr) => {
-          if (error) {
-            console.error(`Error: ${error.message}`);
-          }
+  await runCommand({
+    title: "Installing dependencies",
+    command: `${packageManager} ${packageManager !== "npm" ? "add" : "install"} ${depsToInstall.join(" ")}`,
+  });
+};
 
-          if (stderr) {
-            console.error(`stderr: ${stderr}`);
-          }
-          return resolve();
+interface RunCommandOptions {
+  title: string;
+  command: string;
+  errorMessage?: string;
+}
+
+export const runCommand = async ({ command, title, errorMessage }: RunCommandOptions) => {
+  await commandWithLoading(title, async () => {
+    // Run npm install command
+    return new Promise((resolve) => {
+      exec(`${command}`, { cwd: getWorkspacePath() }, async (error, stdout, stderr) => {
+        if (error) {
+          vscode.window.showErrorMessage(`Error: ${errorMessage}`);
         }
-      );
+
+        /*  if (stderr) {
+          console.error(`stderr: ${stderr}`);
+        }
+        if (stdout) {
+          console.error(`stdout: ${stdout}`);
+        } */
+        return resolve();
+      });
     });
   });
 };
@@ -140,7 +153,7 @@ export const askInstallDependenciesPrompt = async (depsToInstall: string[]) => {
   const message =
     "Remix Forge has generated code that uses dependencies you do not have in the project. Would you like to install these dependencies?";
   const options = ["Yes", "No"];
-  console.log(filteredDepsToInstall);
+
   vscode.window.showInformationMessage(message, ...options).then(async (selectedOption) => {
     if (selectedOption === "Yes") {
       // Install dependencies logic
