@@ -29,7 +29,7 @@ export const commandWithLoading = async (title: string, action: (...args: any[])
       progress.report({ increment: 100, message: "" });
     }
   );
-  await vscode.window.showInformationMessage(`${title} finished!`);
+  return vscode.window.showInformationMessage(`${title} finished!`);
 };
 const getWorkspacePath = () => {
   const workspaceFolders = vscode.workspace.workspaceFolders;
@@ -64,6 +64,21 @@ export async function getDependencies() {
 
 export async function getDependenciesArray() {
   const deps = await getDependencies();
+  if (!deps) {
+    return undefined;
+  }
+  return Object.keys(deps);
+}
+export async function getDevDependencies() {
+  const pkg = await getPackageJson();
+  if (!pkg) {
+    return undefined;
+  }
+  return pkg.devDependencies;
+}
+
+export async function getDevDependenciesArray() {
+  const deps = await getDevDependencies();
   if (!deps) {
     return undefined;
   }
@@ -106,9 +121,21 @@ export const installDependencies = async (depsToInstall: string[]) => {
   if (!pkg) {
     return;
   }
-  await runCommand({
+  return runCommand({
     title: "Installing dependencies",
     command: `${packageManager} ${packageManager !== "npm" ? "add" : "install"} ${depsToInstall.join(" ")}`,
+  });
+};
+
+export const installDevDependencies = async (depsToInstall: string[]) => {
+  const pkg = getPackageJson();
+  const packageManager = await getPackageManager();
+  if (!pkg) {
+    return;
+  }
+  return runCommand({
+    title: "Installing dependencies",
+    command: `${packageManager} ${packageManager !== "npm" ? "add" : "install"} -D ${depsToInstall.join(" ")}`,
   });
 };
 
@@ -116,15 +143,17 @@ interface RunCommandOptions {
   title: string;
   command: string;
   errorMessage?: string;
+  callback?: () => void | Promise<void>;
 }
 
-export const runCommand = async ({ command, title, errorMessage }: RunCommandOptions) => {
-  await commandWithLoading(title, async () => {
+export const runCommand = async ({ command, title, errorMessage, callback }: RunCommandOptions) => {
+  await commandWithLoading(title, () => {
     // Run npm install command
     return new Promise((resolve) => {
       exec(`${command}`, { cwd: getWorkspacePath() }, async (error, stdout, stderr) => {
         if (error) {
           vscode.window.showErrorMessage(`Error: ${errorMessage}`);
+          return resolve();
         }
 
         /*  if (stderr) {
@@ -133,21 +162,24 @@ export const runCommand = async ({ command, title, errorMessage }: RunCommandOpt
         if (stdout) {
           console.error(`stdout: ${stdout}`);
         } */
+        await callback?.();
         return resolve();
       });
     });
   });
 };
 
-export const askInstallDependenciesPrompt = async (depsToInstall: string[]) => {
+export const askInstallDependenciesPrompt = async (depsToInstall: string[], devDepsToInstall?: string[]) => {
   const deps = await getDependenciesArray();
+  const devDeps = await getDevDependenciesArray();
   // No package.json found
   if (!deps) {
     return;
   }
   const filteredDepsToInstall = depsToInstall.filter((dep) => !deps.includes(dep));
+  const filteredDevDepsToInstall = devDepsToInstall?.filter((dep) => !devDeps?.includes(dep)) ?? [];
   // No dependencies to install
-  if (filteredDepsToInstall.length === 0) {
+  if (filteredDepsToInstall.length === 0 && filteredDevDepsToInstall.length === 0) {
     return;
   }
   const message =
@@ -156,9 +188,13 @@ export const askInstallDependenciesPrompt = async (depsToInstall: string[]) => {
 
   vscode.window.showInformationMessage(message, ...options).then(async (selectedOption) => {
     if (selectedOption === "Yes") {
-      // Install dependencies logic
-      await installDependencies(filteredDepsToInstall);
-
+      if (filteredDepsToInstall.length > 0) {
+        // Install dependencies logic
+        await installDependencies(filteredDepsToInstall);
+      }
+      if (filteredDevDepsToInstall.length > 0) {
+        await installDevDependencies(filteredDevDepsToInstall);
+      }
       // Execute the logic to install dependencies here
     } else if (selectedOption === "No") {
       // User chose not to install dependencies
@@ -166,3 +202,5 @@ export const askInstallDependenciesPrompt = async (depsToInstall: string[]) => {
     }
   });
 };
+
+export const showError = (error: string) => vscode.window.showErrorMessage(`${error}`);

@@ -3,7 +3,7 @@
   "displayName": "Remix Forge",
   "description": "Remix Forge - A VS Code extension for Remix.run applications that super charges your development with a ever-growing set of functionalities.",
   "version": "0.1.7",
-  "icon": "./remix-logo.png",
+  "icon": "./remix-forge-logo.png",
   "keywords": [
     "Remix",
     "remix-auth",
@@ -238,6 +238,10 @@
         "title": "Generate Authentication Workflow"
       },
       {
+        "command": "remix-forge.generatePrisma",
+        "title": "Initialize Prisma"
+      },
+      {
         "command": "remix-forge.openUrl",
         "title": "Opens url in browser"
       },
@@ -273,6 +277,11 @@
         },
         {
           "command": "remix-forge.generateAuth",
+          "when": "explorerResourceIsFolder && resourceFilename =~ /app/",
+          "group": "2_Remix@40"
+        },
+        {
+          "command": "remix-forge.generatePrisma",
           "when": "explorerResourceIsFolder && resourceFilename =~ /app/",
           "group": "2_Remix@40"
         },

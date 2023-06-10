@@ -8,24 +8,31 @@ import {
   barrelize,
   generateRemixFormRoute,
   updateRemix,
+  generatePrisma,
 } from "./commands";
 import { ComponentLens } from "./code-lenses/ComponentLens";
 import { LoaderLens } from "./code-lenses/LoaderLens";
 import { ActionLens } from "./code-lenses/ActionLens";
 
+const generateCommand = (command: string) => `remix-forge.${command}`;
+
 export function activate(context: vscode.ExtensionContext) {
-  const flattenRoutesCommand = vscode.commands.registerCommand("remix-forge.flattenRoutes", flattenRoutes);
-  const generateRouteFileCommand = vscode.commands.registerCommand("remix-forge.generateRemixRoute", generateRouteFile);
-  const generateAuthCommand = vscode.commands.registerCommand("remix-forge.generateAuth", generateAuth);
-  const openUrlCommand = vscode.commands.registerCommand("remix-forge.openUrl", openUrl);
-  const barrelizeCommand = vscode.commands.registerCommand("remix-forge.barrelize", barrelize);
-  const updateRemixCommand = vscode.commands.registerCommand("remix-forge.updateRemix", updateRemix);
+  const flattenRoutesCommand = vscode.commands.registerCommand(generateCommand("flattenRoutes"), flattenRoutes);
+  const generateAuthCommand = vscode.commands.registerCommand(generateCommand("generateAuth"), generateAuth);
+  const openUrlCommand = vscode.commands.registerCommand(generateCommand("openUrl"), openUrl);
+  const barrelizeCommand = vscode.commands.registerCommand(generateCommand("barrelize"), barrelize);
+  const updateRemixCommand = vscode.commands.registerCommand(generateCommand("updateRemix"), updateRemix);
+  const generatePrismaCommand = vscode.commands.registerCommand(generateCommand("generatePrisma"), generatePrisma);
+  const generateRouteFileCommand = vscode.commands.registerCommand(
+    generateCommand("generateRemixRoute"),
+    generateRouteFile
+  );
   const generateRemixFormRouteCommand = vscode.commands.registerCommand(
-    "remix-forge.generateRemixFormRoute",
+    generateCommand("generateRemixFormRoute"),
     generateRemixFormRoute
   );
   const generateAuthSnippetCommand = vscode.commands.registerCommand(
-    "remix-forge.generateAuthSnippet",
+    generateCommand("generateAuthSnippet"),
     generateAuthSnippet
   );
   const codeLensProvider = new ComponentLens();
@@ -48,6 +55,7 @@ export function activate(context: vscode.ExtensionContext) {
     generateAuthSnippetCommand,
     barrelizeCommand,
     updateRemixCommand,
+    generatePrismaCommand,
     generateRemixFormRouteCommand
   );
 }

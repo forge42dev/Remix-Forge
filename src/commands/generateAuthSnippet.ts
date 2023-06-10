@@ -36,14 +36,13 @@ export const generateAuthSnippet = async (uri: vscode.Uri, type: "action" | "loa
         lineOutput = lineOutput.replace("params", "params, request");
       }
       if (!line.includes("=> {") && lines[i] && !lines[i].includes("{")) {
-        console.log(lineOutput);
         lineOutput = lineOutput.replace("=>", `=> {\n  return`);
-        console.log(lineOutput);
+
         lineOutput = lineOutput.replace(
           "=> {",
           '=> {\n  await authenticator.isAuthenticated(request, { failureRedirect: "/login" });\n'
         );
-        console.log(lineOutput);
+
         lineOutput = lineOutput + "\n}";
       }
       if (line.includes("=> {")) {
