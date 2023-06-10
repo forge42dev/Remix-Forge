@@ -9,6 +9,15 @@ Remix Forge - A VS Code extension for Remix.run applications that super charges 
 
 ## Features
 
+### Initialize Prisma in your Remix app
+You can now initialize Prisma in your Remix app with a single click. You can do this by right-clicking your `app` folder and selecting `Initialize Prisma` and it will be initialized for you. You choose your database and it will be configured for you. Also adds package.json
+commands for running migrations, seeding the database, generating the client and running prisma studio.
+
+### Update Remix to a newer version
+
+You can now update your Remix to a newer version with a single click. You can do this by right-clicking your `package.json` file and selecting `Update Remix` and it will be updated for you. You can update to the latest version or specify a version you want to update to.
+Defaults to the latest one. This uses `npx upgrade-remix` built and maintained by the Remix team. [Github repo here](https://github.com/brophdawg11/upgrade-remix)
+
 ### Generate Progressively Enhanced Form Routes with zod validation
 You can now generate progressively enhanced form routes with a single click. You can either generate progressive forms with:
 - `remix-hook-form` - React-hook-form wrapper for Remix.run applications
@@ -135,10 +144,17 @@ This extension contributes the following configuration settings:
 - [x] Add ability to generate authenticated routes via actions and loaders
 - [x] Add ability to barrelize folders
 - [x] Add ability to generate fully progressive forms with validation
+- [x] Add ability to setup prisma in your Remix project
+- [x] Add ability to update Remix to the latest or specified version
 - [ ] Add ability for the extension to sniff out the runtime dependency instead of you configuring it
 - [ ] Add ability to generate a component name based on the route name
 
 ## Release Notes 
+
+## 0.1.7 
+- `remix-forge.urlDebug` - Allows you to debug your url generator function (`default is false`).
+- Added ability to setup prisma in your Remix project with a single click
+- Added ability to update your Remix to a newer version with a single click
 
 ## 0.1.5
 - `remix-forge.formHandler` - Choose between remix-hook-form or conform for your forms (`default is remix-hook-form`).

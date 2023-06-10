@@ -3,6 +3,14 @@
 
 All notable changes to the "remix-forge" extension will be documented in this file. 
 
+## [0.1.7]
+### Added
+- `remix-forge.urlDebug` - Allows you to debug your url generator function (`default is false`).
+- Added ability to setup prisma in your Remix project with a single click
+- Added ability to update your Remix to a newer version with a single click
+### Fixed
+- Issue with one of the runtime dependencies of generate auth flow not being dynamic
+
 ## [0.1.5]
 ### Added
 - `remix-forge.formHandler` - Choose between remix-hook-form or conform for your forms (`default is remix-hook-form`).
