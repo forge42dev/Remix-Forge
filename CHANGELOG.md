@@ -3,6 +3,11 @@
 
 All notable changes to the "remix-forge" extension will be documented in this file. 
 
+## [0.1.8]
+### Added
+- `remix-forge.searchStrategy` - Allows you to configure how to search for your test files
+- Added ability to generate test files for your .ts and .tsx files
+
 ## [0.1.7]
 ### Added
 - `remix-forge.urlDebug` - Allows you to debug your url generator function (`default is false`).

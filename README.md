@@ -3,11 +3,22 @@
 Remix Forge - A VS Code extension for Remix.run applications that super charges your development with a ever-growing set of functionalities.
 
 ## Whats new?
-- Added ability to generate progressively enhanced form routes with a single click
-- Added ability to generate barrel files for a folder with a single click
+- Added ability to generate test files for your routes (or anything else)
+- Added ability to initialize Prisma in your Remix app
+- Added ability to generate progressively enhanced form routes with a single click 
 - Added ability to generate the whole authentication scaffolding for Remix applications with a single click 
 
 ## Features
+
+### Generate test files for your routes (or anything else)
+
+- Right click your .ts or .tsx file and click Generate tests and it will generate a test file for you with all the exports imported and ready to be tested. This is useful for when you want to test your routes or any other file that you want to test. 
+
+- If you do not colocate your test files the extension will try to find it in your workspace depending on your search settings. See the [Extension Settings](#extension-settings) section on how you can customize your search.
+
+- If you already have an existing file it will add all the exports that you didn't import into the file for you (eg. if you already tested your loader and component and you add an action it will only add the action import and the action test for you)
+
+This works for any .ts and .tsx file and is not specific to remix routes. You can use this for any file that you want to test.
 
 ### Initialize Prisma in your Remix app
 You can now initialize Prisma in your Remix app with a single click. You can do this by right-clicking your `app` folder and selecting `Initialize Prisma` and it will be initialized for you. You choose your database and it will be configured for you. Also adds package.json
@@ -135,6 +146,8 @@ This extension contributes the following configuration settings:
 * `remix-forge.barrelizeIndexExtension` - Set the generated index file extension (`default is 'ts' => index.ts`).
 * `remix-forge.barrelizeIgnoreFiles` - Ignores the files that include any of the provided strings (`default is ['index', 'test', 'stories]`).
 * `remix-forge.formHandler` - Choose between remix-hook-form or conform for your forms (`default is remix-hook-form`).
+* `remix-forge.urlDebug` - Allows you to debug your url generator function (`default is false`).
+* `remix-forge.searchStrategy` - Allows you to configure how to search for your test files (enum of three values `one-up` - searches one directory above and all subdirectories, `sub` - searches current directory and all subdirectories, `all`- searches the whole project) - default is `one-up`.
 
 ## Roadmap
 
@@ -146,10 +159,15 @@ This extension contributes the following configuration settings:
 - [x] Add ability to generate fully progressive forms with validation
 - [x] Add ability to setup prisma in your Remix project
 - [x] Add ability to update Remix to the latest or specified version
+- [x] Add ability to generate test files
 - [ ] Add ability for the extension to sniff out the runtime dependency instead of you configuring it
 - [ ] Add ability to generate a component name based on the route name
 
 ## Release Notes 
+
+## 0.1.8
+- `remix-forge.searchStrategy` - Allows you to configure how to search for your test files
+- Added ability to generate test files for your .ts and .tsx files
 
 ## 0.1.7 
 - `remix-forge.urlDebug` - Allows you to debug your url generator function (`default is false`).
