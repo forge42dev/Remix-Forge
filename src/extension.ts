@@ -9,6 +9,7 @@ import {
   generateRemixFormRoute,
   updateRemix,
   generatePrisma,
+  generateTests,
 } from "./commands";
 import { ComponentLens } from "./code-lenses/ComponentLens";
 import { LoaderLens } from "./code-lenses/LoaderLens";
@@ -23,6 +24,8 @@ export function activate(context: vscode.ExtensionContext) {
   const barrelizeCommand = vscode.commands.registerCommand(generateCommand("barrelize"), barrelize);
   const updateRemixCommand = vscode.commands.registerCommand(generateCommand("updateRemix"), updateRemix);
   const generatePrismaCommand = vscode.commands.registerCommand(generateCommand("generatePrisma"), generatePrisma);
+  const generateTestsCommand = vscode.commands.registerCommand(generateCommand("generateTests"), generateTests);
+
   const generateRouteFileCommand = vscode.commands.registerCommand(
     generateCommand("generateRemixRoute"),
     generateRouteFile
@@ -56,7 +59,8 @@ export function activate(context: vscode.ExtensionContext) {
     barrelizeCommand,
     updateRemixCommand,
     generatePrismaCommand,
-    generateRemixFormRouteCommand
+    generateRemixFormRouteCommand,
+    generateTestsCommand
   );
 }
 

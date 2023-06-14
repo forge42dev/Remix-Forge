@@ -85,7 +85,7 @@ export const getPathDifference = (rootFolder: string, nestedFolder: string) => {
     i++;
   }
 
-  const nestedPath = nestedParts.slice(i).join(".");
+  const nestedPath = nestedParts.slice(i).join("/");
   return nestedPath;
 };
 

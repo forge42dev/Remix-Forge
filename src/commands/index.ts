@@ -5,5 +5,6 @@ export * from "./generateAuthSnippet";
 export * from "./generateFormRouteFile";
 export * from "./generatePrisma";
 export * from "./generateRouteFile";
+export * from "./generateTests";
 export * from "./openUrl";
 export * from "./updateRemix";
