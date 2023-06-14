@@ -34,7 +34,6 @@ export const generateTests = async (uri: vscode.Uri) => {
       vscode.Uri.joinPath(uri, "..", fileNameWithoutExtension + ".test." + fileNameExtension),
       isRouteFile
     );
+    askInstallDependenciesPrompt([], ["@testing-library/react"]);
   });
-
-  askInstallDependenciesPrompt([], ["@testing-library/react"]);
 };
