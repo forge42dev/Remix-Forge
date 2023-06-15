@@ -3,12 +3,17 @@
 Remix Forge - A VS Code extension for Remix.run applications that super charges your development with a ever-growing set of functionalities.
 
 ## Whats new?
+- Added ability to initialize eslint and prettier in your Remix project
 - Added ability to generate test files for your routes (or anything else)
 - Added ability to initialize Prisma in your Remix app
 - Added ability to generate progressively enhanced form routes with a single click 
 - Added ability to generate the whole authentication scaffolding for Remix applications with a single click 
 
 ## Features
+
+### Initialize eslint and prettier in your Remix project
+
+- Right click your `package.json` file and add eslint and prettier to your project configured with remix eslint
 
 ### Generate test files for your routes (or anything else)
 
@@ -160,10 +165,14 @@ This extension contributes the following configuration settings:
 - [x] Add ability to setup prisma in your Remix project
 - [x] Add ability to update Remix to the latest or specified version
 - [x] Add ability to generate test files
+- [x] Add ability to initialize eslint and prettier
 - [ ] Add ability for the extension to sniff out the runtime dependency instead of you configuring it
 - [ ] Add ability to generate a component name based on the route name
 
 ## Release Notes 
+
+## 0.2.0
+- Added ability to initialize eslint and prettier in your Remix project
 
 ## 0.1.8
 - `remix-forge.searchStrategy` - Allows you to configure how to search for your test files

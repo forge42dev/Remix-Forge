@@ -3,6 +3,9 @@
 
 All notable changes to the "remix-forge" extension will be documented in this file. 
 
+## [0.2.0]
+- Added ability to initialize eslint and prettier in your Remix project
+
 ## [0.1.8]
 ### Added
 - `remix-forge.searchStrategy` - Allows you to configure how to search for your test files

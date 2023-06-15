@@ -2,7 +2,7 @@
   "name": "remix-forge",
   "displayName": "Remix Forge",
   "description": "Remix Forge - A VS Code extension for Remix.run applications that super charges your development with a ever-growing set of functionalities.",
-  "version": "0.1.9",
+  "version": "0.2.0",
   "icon": "./remix-forge-logo.png",
   "keywords": [
     "Remix",
@@ -247,6 +247,10 @@
         "title": "Generate Remix Route"
       },
       {
+        "command": "remix-forge.linting",
+        "title": "Initialize eslint and prettier"
+      },
+      {
         "command": "remix-forge.generateTests",
         "title": "Generate Tests"
       },
@@ -319,6 +323,11 @@
           "command": "remix-forge.updateRemix",
           "when": " resourceFilename =~ /package.json/",
           "group": "2_Remix@50"
+        },
+        {
+          "command": "remix-forge.linting",
+          "when": " resourceFilename =~ /package.json/",
+          "group": "2_Remix@55"
         },
         {
           "command": "remix-forge.barrelize",

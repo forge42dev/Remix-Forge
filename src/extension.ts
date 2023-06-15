@@ -10,6 +10,7 @@ import {
   updateRemix,
   generatePrisma,
   generateTests,
+  linting,
 } from "./commands";
 import { ComponentLens } from "./code-lenses/ComponentLens";
 import { LoaderLens } from "./code-lenses/LoaderLens";
@@ -25,6 +26,7 @@ export function activate(context: vscode.ExtensionContext) {
   const updateRemixCommand = vscode.commands.registerCommand(generateCommand("updateRemix"), updateRemix);
   const generatePrismaCommand = vscode.commands.registerCommand(generateCommand("generatePrisma"), generatePrisma);
   const generateTestsCommand = vscode.commands.registerCommand(generateCommand("generateTests"), generateTests);
+  const lintingCommand = vscode.commands.registerCommand(generateCommand("linting"), linting);
 
   const generateRouteFileCommand = vscode.commands.registerCommand(
     generateCommand("generateRemixRoute"),
@@ -60,7 +62,8 @@ export function activate(context: vscode.ExtensionContext) {
     updateRemixCommand,
     generatePrismaCommand,
     generateRemixFormRouteCommand,
-    generateTestsCommand
+    generateTestsCommand,
+    lintingCommand
   );
 }
 

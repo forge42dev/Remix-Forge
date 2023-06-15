@@ -6,5 +6,6 @@ export * from "./generateFormRouteFile";
 export * from "./generatePrisma";
 export * from "./generateRouteFile";
 export * from "./generateTests";
+export * from "./linting";
 export * from "./openUrl";
 export * from "./updateRemix";

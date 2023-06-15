@@ -31,7 +31,8 @@ export const commandWithLoading = async (title: string, action: (...args: any[])
   );
   return vscode.window.showInformationMessage(`${title} finished!`);
 };
-const getWorkspacePath = () => {
+
+export const getWorkspacePath = () => {
   const workspaceFolders = vscode.workspace.workspaceFolders;
   if (!workspaceFolders || workspaceFolders.length === 0) {
     return undefined; // No workspace folders found
@@ -40,6 +41,7 @@ const getWorkspacePath = () => {
   const workspaceFolderPath = workspaceFolders[0].uri.fsPath;
   return workspaceFolderPath;
 };
+
 export async function getPackageJson() {
   const workspaceFolderPath = getWorkspacePath();
   if (!workspaceFolderPath) {
