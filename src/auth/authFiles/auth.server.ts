@@ -1,7 +1,7 @@
 import { AUTH_STRATEGY_OPTION } from "../config/options";
 
 export const generateAuthFileContent = (options: AUTH_STRATEGY_OPTION[]) => {
-  const authStrategies = options.map((option) => `  ${option.key.toUpperCase()} = "${option.key}"`).join(",\n");
+  const authStrategies = options.map((option) => `  ${option.key.toUpperCase()}: "${option.key}"`).join(",\n");
   const authStrategyImports = options
     .map((option) => `import { ${option.key}Strategy } from "./auth_strategies/${option.key}.strategy";`)
     .join("\n");
@@ -17,9 +17,9 @@ export const generateAuthFileContent = (options: AUTH_STRATEGY_OPTION[]) => {
     "  // Add your own user properties here or extend with a type from your database",
     "}",
     "",
-    "export enum AuthStrategies {",
+    "export const AuthStrategies = {",
     authStrategies,
-    "}",
+    "} as const;",
     "",
     "export type AuthStrategy =  typeof AuthStrategies[keyof typeof AuthStrategies];",
     "",

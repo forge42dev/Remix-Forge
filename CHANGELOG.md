@@ -3,7 +3,12 @@
 
 All notable changes to the "remix-forge" extension will be documented in this file. 
 
+## [0.2.1]
+### Modified
+- Changed the auth flow generation to output an object instead of an enum
+
 ## [0.2.0]
+### Added
 - Added ability to initialize eslint and prettier in your Remix project
 
 ## [0.1.8]
