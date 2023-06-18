@@ -2,6 +2,8 @@ import { WorkspaceConfiguration } from "vscode";
 
 export const generateDependencies = (config: WorkspaceConfiguration, selectedGenerators: string[]) => {
   const runtimeDependency = config.get("runtimeDependency") || "@remix-run/node";
+  const actionImports = config.get("customActionImports") || "";
+  const loaderImports = config.get("customLoaderImports") || "";
   const reactDeps = [];
   const remixDeps = [];
   const reactTypeDeps = [];
@@ -29,7 +31,7 @@ export const generateDependencies = (config: WorkspaceConfiguration, selectedGen
     reactDeps.push("isRouteErrorResponse", "useRouteError");
   }
 
-  const output = [];
+  const output = [...(actionImports ? [actionImports] : []), ...(loaderImports ? [loaderImports] : [])];
 
   if (metaDeps.length) {
     output.push(`import type { ${metaDeps.join(", ")} } from "@remix-run/react/dist/routeModules";`);

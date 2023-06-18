@@ -1,7 +1,7 @@
 export const generateOAuth2Strategy = () => {
   return [
     "// Refer to https://github.com/sergiodxa/remix-auth-oauth2 for more information",
-    'import { AuthStrategies } from "~/services/auth.server";',
+    'import { AuthStrategies } from "~/services/auth_strategies";',
     'import type { User } from "~/services/auth.server";',
     'import { OAuth2Strategy } from "remix-auth-oauth2";',
     'import type { OAuth2Profile } from "remix-auth-oauth2";',

@@ -8,26 +8,28 @@ export const generateAuthFileContent = (options: AUTH_STRATEGY_OPTION[]) => {
   const authStrategyUsage = options
     .map((option) => `authenticator.use(${option.key}Strategy, AuthStrategies.${option.key.toUpperCase()});`)
     .join("\n");
-  return [
-    'import { Authenticator } from "remix-auth";',
-    'import { sessionStorage } from "~/services/session.server";',
-    authStrategyImports,
-    "",
-    "export interface User {",
-    "  // Add your own user properties here or extend with a type from your database",
-    "}",
-    "",
-    "export const AuthStrategies = {",
-    authStrategies,
-    "} as const;",
-    "",
-    "export type AuthStrategy =  typeof AuthStrategies[keyof typeof AuthStrategies];",
-    "",
-    "// Create an instance of the authenticator, pass a generic with what",
-    "// strategies will return and will store in the session",
-    "export const authenticator = new Authenticator<User>(sessionStorage);",
-    "",
-    "// Register your strategies below",
-    authStrategyUsage,
-  ].join("\n");
+
+  const authStrategiesOutput = ["export const AuthStrategies = {", authStrategies, "} as const;"];
+  return {
+    content: [
+      'import { Authenticator } from "remix-auth";',
+      'import { sessionStorage } from "~/services/session.server";',
+      'import { AuthStrategies } from "~/services/auth_strategies";',
+      authStrategyImports,
+      "",
+      "export interface User {",
+      "  // Add your own user properties here or extend with a type from your database",
+      "}",
+      "",
+      "export type AuthStrategy =  typeof AuthStrategies[keyof typeof AuthStrategies];",
+      "",
+      "// Create an instance of the authenticator, pass a generic with what",
+      "// strategies will return and will store in the session",
+      "export const authenticator = new Authenticator<User>(sessionStorage);",
+      "",
+      "// Register your strategies below",
+      authStrategyUsage,
+    ].join("\n"),
+    authStrategiesOutput: authStrategiesOutput.join("\n"),
+  };
 };

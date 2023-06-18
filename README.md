@@ -3,6 +3,8 @@
 Remix Forge - A VS Code extension for Remix.run applications that super charges your development with a ever-growing set of functionalities.
 
 ## Whats new?
+- Added ability to initialize a project for shadcn/ui components in Remix
+- Added ability to generate all supported components by the shadcn/ui CLI
 - Added ability to initialize eslint and prettier in your Remix project
 - Added ability to generate test files for your routes (or anything else)
 - Added ability to initialize Prisma in your Remix app
@@ -11,6 +13,16 @@ Remix Forge - A VS Code extension for Remix.run applications that super charges 
 
 ## Features
 
+### Get your Remix project shadcn/ui ready
+
+Right click your `package.json` and initialize all the setup required for shadcn/ui tailored to Remix instead of Next.js. This will add the following to your project:
+- tailwind config and turn on the tailwind Remix compiler if not done already
+- Adds the css file and imports it into root if possible
+- Sets up the utils folder in the specified directory
+- Adds the `@/` alias to your tsconfig.json
+
+After that right click your `app` folder and add the shadcn/ui components to your application, just specify where you want to store them and you're good to go. The extension will generate the components for you and add them to your `app/components/ui` folder by default, or the location specified by you and remember it.
+ 
 ### Initialize eslint and prettier in your Remix project
 
 - Right click your `package.json` file and add eslint and prettier to your project configured with remix eslint
@@ -103,6 +115,11 @@ This is useful for when you want to import a lot of imports from a directory and
 
 ## Usage
 
+## Shadcn/ui Generation
+Here is an example video of the basic usage:
+
+<video src="https://raw.githubusercontent.com/Code-Forge-Net/Remix-Forge/main/shadcn-ui-demo.mp4" controls="controls" style="max-width: 730px;">
+</video>
 
 ## Progressive Form routes
 Here is an example video of the basic usage:
@@ -153,6 +170,10 @@ This extension contributes the following configuration settings:
 * `remix-forge.formHandler` - Choose between remix-hook-form or conform for your forms (`default is remix-hook-form`).
 * `remix-forge.urlDebug` - Allows you to debug your url generator function (`default is false`).
 * `remix-forge.searchStrategy` - Allows you to configure how to search for your test files (enum of three values `one-up` - searches one directory above and all subdirectories, `sub` - searches current directory and all subdirectories, `all`- searches the whole project) - default is `one-up`.
+* `remix-forge.componentFolder` - Allows you to specify the folder where your shadcn/ui components are located (`default is 'app/components/ui'`).
+* `remix-forge.customActionImports` - Allows you to specify custom imports for your actions when generating route files
+* `remix-forge.customLoaderImports` - Allows you to specify custom imports for your loaders when generating route files
+* `remix-forge.formRouteTemplate` - Allows you to specify a custom template for your form route files
 
 ## Roadmap
 
@@ -166,10 +187,26 @@ This extension contributes the following configuration settings:
 - [x] Add ability to update Remix to the latest or specified version
 - [x] Add ability to generate test files
 - [x] Add ability to initialize eslint and prettier
+- [x] Add ability to setup and generate shadcn/ui components in your Remix project
+- [ ] Add ability to setup stripe in your Remix projects
 - [ ] Add ability for the extension to sniff out the runtime dependency instead of you configuring it
 - [ ] Add ability to generate a component name based on the route name
 
 ## Release Notes 
+
+## 0.3.0 
+
+### Features
+- Added ability to initialize a project for shadcn/ui components in Remix
+- Added ability to generate all supported components by the shadcn/ui CLI
+
+### Configuration
+- `remix-forge.componentFolder` - Allows you to specify the folder where your shadcn/ui components are located (`default is 'app/components/ui'`).
+- `remix-forge.customActionImports` - Allows you to specify custom imports for your actions when generating route files
+- `remix-forge.customLoaderImports` - Allows you to specify custom imports for your loaders when generating route files
+- `remix-forge.formRouteTemplate` - Allows you to specify a custom template for your form route files
+
+- Changed the auth flow generation to output the AuthStrategies object into a separate file so it can be imported in both server/client bundles
 
 ## 0.2.0
 - Added ability to initialize eslint and prettier in your Remix project

@@ -21,4 +21,9 @@ export const getConfig = () => {
   return vscode.workspace.getConfiguration(EXTENSION_CONFIG_SECTION);
 };
 
+export const updateConfig = (key: string, value: string) => {
+  const config = getConfig();
+  config.update(key, value, vscode.ConfigurationTarget.Workspace);
+};
+
 export { config };

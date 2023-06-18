@@ -1,7 +1,7 @@
 export const generateDiscordStrategy = () => {
   return [
     "// Refer to https://www.npmjs.com/package/remix-auth-socials for more information",
-    'import { AuthStrategies } from "~/services/auth.server";',
+    'import { AuthStrategies } from "~/services/auth_strategies";',
     'import type { User } from "~/services/auth.server";',
     'import { DiscordStrategy } from "remix-auth-socials";',
     "",

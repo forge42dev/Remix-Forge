@@ -240,9 +240,10 @@ export function getFilesExports(fileContent: string) {
  * @param filePath File path to read
  * @returns Returns the file content as a string or null if the file does not exist
  */
-export const tryReadFile = async (filePath: string) => {
+export const tryReadFile = async (filePath: string | vscode.Uri) => {
+  const location = typeof filePath === "string" ? vscode.Uri.file(filePath) : filePath;
   try {
-    const fileContent = await vscode.workspace.fs.readFile(vscode.Uri.file(filePath));
+    const fileContent = await vscode.workspace.fs.readFile(location);
     return fileContent.toString();
   } catch (e) {
     return null;

@@ -1,7 +1,22 @@
 # Change Log
 
-
 All notable changes to the "remix-forge" extension will be documented in this file. 
+
+## [0.3.0]
+### Added
+
+#### Features
+- Added ability to initialize a project for shadcn/ui components in Remix
+- Added ability to generate all supported components by the shadcn/ui CLI
+
+#### Configuration
+- `remix-forge.componentFolder` - Allows you to specify the folder where your shadcn/ui components are located (`default is 'app/components/ui'`).
+- `remix-forge.customActionImports` - Allows you to specify custom imports for your actions when generating route files
+- `remix-forge.customLoaderImports` - Allows you to specify custom imports for your loaders when generating route files
+- `remix-forge.formRouteTemplate` - Allows you to specify a custom template for your form route files
+
+### Modified
+- Changed the auth flow generation to output the AuthStrategies object into a separate file so it can be imported in both server/client bundles
 
 ## [0.2.1]
 ### Modified

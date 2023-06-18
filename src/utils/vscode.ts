@@ -1,4 +1,4 @@
-import { exec } from "child_process";
+import { ChildProcess, exec } from "child_process";
 import * as vscode from "vscode";
 
 export const commandWithLoading = async (title: string, action: (...args: any[]) => Promise<void> | void) => {
@@ -29,7 +29,8 @@ export const commandWithLoading = async (title: string, action: (...args: any[])
       progress.report({ increment: 100, message: "" });
     }
   );
-  return vscode.window.showInformationMessage(`${title} finished!`);
+  vscode.window.showInformationMessage(`${title} finished!`).then(() => {});
+  return;
 };
 
 export const getWorkspacePath = () => {
@@ -158,15 +159,31 @@ export const runCommand = async ({ command, title, errorMessage, callback }: Run
           return resolve();
         }
 
-        /*  if (stderr) {
+        if (stderr) {
           console.error(`stderr: ${stderr}`);
         }
         if (stdout) {
           console.error(`stdout: ${stdout}`);
-        } */
+        }
         await callback?.();
         return resolve();
       });
+    });
+  });
+};
+
+interface RunCommandWithPrompt {
+  title: string;
+  command: string;
+  promptHandler: (process: ChildProcess, resolve: () => void) => Promise<void>;
+}
+export const runCommandWithPrompt = async ({ command, title, promptHandler }: RunCommandWithPrompt) => {
+  await commandWithLoading(title, () => {
+    // Run npm install command
+    return new Promise(async (resolve) => {
+      const process = exec(`${command}`, { cwd: getWorkspacePath() });
+
+      await promptHandler(process, resolve);
     });
   });
 };
@@ -206,3 +223,37 @@ export const askInstallDependenciesPrompt = async (depsToInstall: string[], devD
 };
 
 export const showError = (error: string) => vscode.window.showErrorMessage(`${error}`);
+
+export const getUserInput = async (prompt: string, value?: string) => {
+  return await vscode.window.showInputBox({
+    prompt,
+    value,
+  });
+};
+
+export const getPickableOptions = async <T extends vscode.QuickPickItem>(
+  options: T[],
+  config?: vscode.QuickPickOptions
+) => await vscode.window.showQuickPick<T>(options, config);
+
+export const getMultiplePickableOptions = async <T extends vscode.QuickPickItem>(
+  options: T[],
+  config?: vscode.QuickPickOptions
+) => await vscode.window.showQuickPick<T>(options, { ...config, canPickMany: true });
+
+export const sanitizePath = (path: string) => (path.startsWith("/") ? path : `/${path}`);
+
+export const writeToFile = async (path: string | vscode.Uri, content: string) => {
+  const destination = typeof path === "string" ? vscode.Uri.file(path) : path;
+  await vscode.workspace.fs.writeFile(destination, Buffer.from(content));
+};
+
+export const joinPath = (base: vscode.Uri, ...args: string[]) => vscode.Uri.joinPath(base, ...args);
+
+export const tryReadDirectory = async (path: string | vscode.Uri) => {
+  try {
+    return await vscode.workspace.fs.readDirectory(typeof path === "string" ? vscode.Uri.file(path) : path);
+  } catch (e) {
+    return [];
+  }
+};

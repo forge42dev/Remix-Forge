@@ -11,7 +11,7 @@ import { authRouteFileContent } from "../auth/authFiles/auth";
 import { generateEnvVars } from "../auth/authFiles/env";
 import { dashboardFileContent } from "../auth/authFiles/dashboard";
 import { getConfig } from "../config";
-import { askInstallDependenciesPrompt } from "../utils/vscode";
+import { askInstallDependenciesPrompt, joinPath, writeToFile } from "../utils/vscode";
 
 export const generateAuth = async (uri: vscode.Uri) => {
   const options = await vscode.window.showQuickPick<AUTH_STRATEGY_OPTION>(AUTH_OPTIONS, {
@@ -56,8 +56,9 @@ export const generateAuth = async (uri: vscode.Uri) => {
   await vscode.workspace.fs.writeFile(sessionFile, Buffer.from(sessionFileContent(), "utf8"));
 
   const authFile = vscode.Uri.joinPath(servicesFolder, "auth.server.ts");
-  const authFileContent = Buffer.from(generateAuthFileContent(options), "utf8");
-
+  const { content, authStrategiesOutput } = generateAuthFileContent(options);
+  const authFileContent = Buffer.from(content, "utf8");
+  await writeToFile(joinPath(strategyFolder, "index.ts"), authStrategiesOutput);
   await vscode.workspace.fs.writeFile(authFile, authFileContent);
 
   for (const option of options) {

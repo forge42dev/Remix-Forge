@@ -1,7 +1,7 @@
 export const generateGoogleStrategy = () => {
   return [
     "// Refer to https://github.com/pbteja1998/remix-auth-google for more information",
-    'import { AuthStrategies } from "~/services/auth.server";',
+    'import { AuthStrategies } from "~/services/auth_strategies";',
     'import type { User } from "~/services/auth.server";',
     'import { GoogleStrategy } from "remix-auth-google";',
     "",

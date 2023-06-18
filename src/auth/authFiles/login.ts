@@ -9,7 +9,7 @@ export const loginFileContent = (options: AUTH_STRATEGY_OPTION[]) => {
     .join("\n");
   return [
     'import { Form } from "@remix-run/react"',
-    'import { AuthStrategies } from "~/services/auth.server";',
+    'import { AuthStrategies } from "~/services/auth_strategies";',
     'import type { AuthStrategy } from "~/services/auth.server";',
     "",
     "interface SocialButtonProps {",

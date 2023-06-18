@@ -5,16 +5,24 @@ import { askInstallDependenciesPrompt } from "../utils/vscode";
 
 export const generateRemixFormRoute = async (uri: vscode.Uri) => {
   const config = getConfig();
+  const template = config.get<string>("formRouteTemplate");
 
   const fileName = await vscode.window.showInputBox({
     prompt: "Enter the name of the route to generate",
   });
+
   if (!fileName) {
     return;
   }
+  const filePath = vscode.Uri.joinPath(uri, fileName + ".tsx");
+
+  if (template) {
+    await vscode.workspace.fs.writeFile(filePath, Buffer.from(template));
+    return;
+  }
+
   const formHandler = config.get("formHandler") || "remix-hook-form";
 
-  const filePath = vscode.Uri.joinPath(uri, fileName + ".tsx");
   await vscode.workspace.fs.writeFile(
     filePath,
     Buffer.from(formHandler === "remix-hook-form" ? generateRemixHookForm() : generateConformForm())

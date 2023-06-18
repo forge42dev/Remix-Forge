@@ -1,7 +1,7 @@
 export const generateAuth0Strategy = () => {
   return [
     "// Refer to https://github.com/danestves/remix-auth-auth0 for more information",
-    'import { AuthStrategies } from "~/services/auth.server";',
+    'import { AuthStrategies } from "~/services/auth_strategies";',
     'import type { User } from "~/services/auth.server";',
     'import { Auth0Strategy } from "remix-auth-auth0";',
     "",

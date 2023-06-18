@@ -18,7 +18,9 @@
     "reactjs",
     "testing-library",
     "jest",
-    "vitest"
+    "vitest",
+    "shadncn-ui",
+    "shadcn"
   ],
   "publisher": "CodeForge",
   "engines": {
@@ -238,6 +240,22 @@
             "sub"
           ],
           "description": "How far to search for a file from the current directory. All will search the whole project, one-up will search the current directory and its parent, sub will search the current directory and its children."
+        },
+        "remix-forge.componentFolder": {
+          "type": "string",
+          "description": "The folder where the shadcn/ui components will be generated."
+        },
+        "remix-forge.customActionImports": {
+          "type": "string",
+          "description": "Allows you to add custom imports whenever you generate a route with an action inside"
+        },
+        "remix-forge.customLoaderImports": {
+          "type": "string",
+          "description": "Allows you to add custom imports whenever you generate a route with a loader inside"
+        },
+        "remix-forge.formRouteTemplate": {
+          "type": "string",
+          "description": "The template to use when generating a form route"
         }
       }
     },
@@ -245,6 +263,14 @@
       {
         "command": "remix-forge.generateRemixRoute",
         "title": "Generate Remix Route"
+      },
+      {
+        "command": "remix-forge.generateShadcnUI",
+        "title": "Add shadcn-ui components to your project"
+      },
+      {
+        "command": "remix-forge.initShadcnUi",
+        "title": "Initialize shadcn-ui config in your project"
       },
       {
         "command": "remix-forge.linting",
@@ -315,6 +341,11 @@
           "group": "2_Remix@40"
         },
         {
+          "command": "remix-forge.generateShadcnUI",
+          "when": "explorerResourceIsFolder && resourceFilename =~ /app/",
+          "group": "2_Remix@35"
+        },
+        {
           "command": "remix-forge.generatePrisma",
           "when": "explorerResourceIsFolder && resourceFilename =~ /app/",
           "group": "2_Remix@40"
@@ -322,12 +353,17 @@
         {
           "command": "remix-forge.updateRemix",
           "when": " resourceFilename =~ /package.json/",
-          "group": "2_Remix@50"
+          "group": "2_Remix@10"
         },
         {
           "command": "remix-forge.linting",
           "when": " resourceFilename =~ /package.json/",
-          "group": "2_Remix@55"
+          "group": "2_Remix@15"
+        },
+        {
+          "command": "remix-forge.initShadcnUi",
+          "when": " resourceFilename =~ /package.json/",
+          "group": "2_Remix@20"
         },
         {
           "command": "remix-forge.barrelize",

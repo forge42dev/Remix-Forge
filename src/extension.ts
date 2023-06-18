@@ -11,6 +11,8 @@ import {
   generatePrisma,
   generateTests,
   linting,
+  generateShadcnUI,
+  initShadcnUi,
 } from "./commands";
 import { ComponentLens } from "./code-lenses/ComponentLens";
 import { LoaderLens } from "./code-lenses/LoaderLens";
@@ -27,6 +29,11 @@ export function activate(context: vscode.ExtensionContext) {
   const generatePrismaCommand = vscode.commands.registerCommand(generateCommand("generatePrisma"), generatePrisma);
   const generateTestsCommand = vscode.commands.registerCommand(generateCommand("generateTests"), generateTests);
   const lintingCommand = vscode.commands.registerCommand(generateCommand("linting"), linting);
+  const initShadcnUiCommand = vscode.commands.registerCommand(generateCommand("initShadcnUi"), initShadcnUi);
+  const generateShadcnUICommand = vscode.commands.registerCommand(
+    generateCommand("generateShadcnUI"),
+    generateShadcnUI
+  );
 
   const generateRouteFileCommand = vscode.commands.registerCommand(
     generateCommand("generateRemixRoute"),
@@ -63,7 +70,9 @@ export function activate(context: vscode.ExtensionContext) {
     generatePrismaCommand,
     generateRemixFormRouteCommand,
     generateTestsCommand,
-    lintingCommand
+    lintingCommand,
+    initShadcnUiCommand,
+    generateShadcnUICommand
   );
 }
 

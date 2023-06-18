@@ -1,7 +1,7 @@
 export const generateTwitterStrategy = () => {
   return [
     "// Refer to https://github.com/na2hiro/remix-auth-twitter for more information",
-    'import { AuthStrategies } from "~/services/auth.server";',
+    'import { AuthStrategies } from "~/services/auth_strategies";',
     'import type { User } from "~/services/auth.server";',
     'import { TwitterStrategy } from "remix-auth-twitter";',
     "",
@@ -16,7 +16,6 @@ export const generateTwitterStrategy = () => {
     "  clientID,",
     "  clientSecret,",
     "  callbackURL: `${process.env.APP_URL}/auth/${AuthStrategies.TWITTER}/callback`,",
-    "  includeEmail: true",
     "},",
     "async ({ accessToken, accessTokenSecret, profile }) => {",
     "  // Do something with the tokens and profile",

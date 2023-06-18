@@ -1,7 +1,7 @@
 export const generateGithubStrategy = () => {
   return [
     "// Refer to https://github.com/sergiodxa/remix-auth-github for more information",
-    'import { AuthStrategies } from "~/services/auth.server";',
+    'import { AuthStrategies } from "~/services/auth_strategies";',
     'import type { User } from "~/services/auth.server";',
     'import { GitHubStrategy } from "remix-auth-github";',
     "",
