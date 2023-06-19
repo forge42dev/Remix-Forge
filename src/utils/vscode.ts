@@ -149,6 +149,17 @@ interface RunCommandOptions {
   callback?: () => void | Promise<void>;
 }
 
+export const createOrGetTerminal = () => {
+  const terminals = vscode.window.terminals;
+  if (terminals.length > 0) {
+    const terminal = terminals.find((t) => !t.state.isInteractedWith);
+    if (terminal) {
+      return terminal;
+    }
+  }
+  return vscode.window.createTerminal();
+};
+
 export const runCommand = async ({ command, title, errorMessage, callback }: RunCommandOptions) => {
   await commandWithLoading(title, () => {
     // Run npm install command

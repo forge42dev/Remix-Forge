@@ -10,7 +10,7 @@ Remix Forge - A VS Code extension for Remix.run applications that super charges 
 - Added ability to initialize Prisma in your Remix app
 - Added ability to generate progressively enhanced form routes with a single click 
 - Added ability to generate the whole authentication scaffolding for Remix applications with a single click 
-
+- Added a notification on startup that lets you know there is a new version of Remix.run available
 ## Features
 
 ### Get your Remix project shadcn/ui ready
@@ -174,6 +174,7 @@ This extension contributes the following configuration settings:
 * `remix-forge.customActionImports` - Allows you to specify custom imports for your actions when generating route files
 * `remix-forge.customLoaderImports` - Allows you to specify custom imports for your loaders when generating route files
 * `remix-forge.formRouteTemplate` - Allows you to specify a custom template for your form route files
+* `remix-forge.latestRemixNotification` - Allows you to disable the notification that shows up when a new version of Remix is available (`default is true`).
 
 ## Roadmap
 
@@ -193,6 +194,11 @@ This extension contributes the following configuration settings:
 - [ ] Add ability to generate a component name based on the route name
 
 ## Release Notes 
+
+## 0.3.1
+### Added
+- `remix-forge.latestRemixNotification` - Allows you to disable the notification that shows up when a new version of Remix is available (`default is true`).
+- Added a notification on startup that lets you know there is a new version of Remix.run available
 
 ## 0.3.0 
 

@@ -6,7 +6,9 @@ export const updateRemix = async () => {
     prompt: "Enter the version of Remix you want to update to (latest, nightly, or specific version, eg: 1.17.0)",
     value: "latest",
   });
-
+  if (!version) {
+    return;
+  }
   await runCommand({
     command: `npx upgrade-remix ${version ? version : ""}`,
     title: "Updating Remix dependencies",

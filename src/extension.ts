@@ -17,6 +17,7 @@ import {
 import { ComponentLens } from "./code-lenses/ComponentLens";
 import { LoaderLens } from "./code-lenses/LoaderLens";
 import { ActionLens } from "./code-lenses/ActionLens";
+import { checkRemixVersion } from "./startup/checkRemixVersion";
 
 const generateCommand = (command: string) => `remix-forge.${command}`;
 
@@ -74,6 +75,8 @@ export function activate(context: vscode.ExtensionContext) {
     initShadcnUiCommand,
     generateShadcnUICommand
   );
+  // Do all the startup checks after this line
+  checkRemixVersion();
 }
 
 export function deactivate() {}

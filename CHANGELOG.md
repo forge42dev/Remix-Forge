@@ -2,6 +2,11 @@
 
 All notable changes to the "remix-forge" extension will be documented in this file. 
 
+## [0.3.1]
+### Added
+- `remix-forge.latestRemixNotification` - Allows you to disable the notification that shows up when a new version of Remix is available (`default is true`).
+- Added a notification on startup that lets you know there is a new version of Remix.run available
+
 ## [0.3.0]
 ### Added
 
