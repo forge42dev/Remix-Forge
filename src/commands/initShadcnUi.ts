@@ -12,11 +12,23 @@ import { getRootDir, tryReadFile } from "../utils/file";
 import { getConfig } from "../config";
 
 const moveUtils = async (rootDir: vscode.Uri, libLocation: string) => {
-  await vscode.workspace.fs.rename(
-    joinPath(rootDir, "lib", "utils.ts"),
-    joinPath(rootDir, libLocation.startsWith("/") ? libLocation : `/${libLocation}`, "utils.ts")
-  );
-  await vscode.workspace.fs.delete(vscode.Uri.joinPath(rootDir, "lib"));
+  const oldLocation = joinPath(rootDir, "lib", "utils.ts");
+  const newLocation = joinPath(rootDir, sanitizePath(libLocation), "utils.ts");
+  if (oldLocation === newLocation) {
+    return;
+  }
+  const newLoc = await tryReadFile(newLocation);
+  if (!newLoc) {
+    await vscode.workspace.fs.createDirectory(newLocation);
+  }
+  await vscode.workspace.fs.rename(oldLocation, newLocation);
+  try {
+    await vscode.workspace.fs.delete(vscode.Uri.joinPath(rootDir, "lib"));
+  } catch (err) {
+    vscode.window.showErrorMessage(
+      "Failed to delete lib folder on the root due to the extension not having the required permissions to remove the directory. Please delete it manually."
+    );
+  }
 };
 
 const updateRemixConfig = async (rootDir: vscode.Uri) => {
@@ -35,7 +47,7 @@ const updateRemixConfig = async (rootDir: vscode.Uri) => {
 
 const updateRoot = async (rootDir: vscode.Uri, cssName: string, runtimeDependency: string) => {
   try {
-    const rootPath = vscode.Uri.joinPath(rootDir, "app", "root.tsx");
+    const rootPath = joinPath(rootDir, "app", "root.tsx");
     const root = await tryReadFile(rootPath);
     // Modifies the root path
     if (root) {
@@ -145,7 +157,7 @@ export const initShadcnUi = async (uri: vscode.Uri) => {
       process.stdin?.end();
 
       process.stdout?.on("data", (data) => {
-        console.log(data.toString());
+        //console.log(data.toString());
       });
       process.stdout?.on("end", resolve);
     },
