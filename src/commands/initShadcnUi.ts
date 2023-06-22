@@ -47,7 +47,7 @@ const updateRemixConfig = async (rootDir: vscode.Uri) => {
 
 const updateRoot = async (rootDir: vscode.Uri, cssName: string, runtimeDependency: string) => {
   try {
-    const rootPath = vscode.Uri.joinPath(rootDir, "app", "root.tsx");
+    const rootPath = joinPath(rootDir, "app", "root.tsx");
     const root = await tryReadFile(rootPath);
     // Modifies the root path
     if (root) {
