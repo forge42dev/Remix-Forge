@@ -1,6 +1,9 @@
 # Change Log
 
 All notable changes to the "remix-forge" extension will be documented in this file. 
+## [0.3.2]
+### Fixed
+- Issue with shadcn-ui initialization not working properly
 
 ## [0.3.1]
 ### Added
