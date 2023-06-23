@@ -194,9 +194,9 @@ This extension contributes the following configuration settings:
 - [ ] Add ability to generate a component name based on the route name
 
 ## Release Notes 
-
-## 0.3.1
-### Added
+## 0.3.3 
+- Full revamp of the shadcn-ui init and generate commands to support the new CLI
+## 0.3.1 
 - `remix-forge.latestRemixNotification` - Allows you to disable the notification that shows up when a new version of Remix is available (`default is true`).
 - Added a notification on startup that lets you know there is a new version of Remix.run available
 

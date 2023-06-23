@@ -27,6 +27,7 @@ const availableComponentList = [
   "Context Menu",
   "Dialog",
   "Dropdown Menu",
+  "Form",
   "Hover Card",
   "Input",
   "Label",
@@ -74,13 +75,14 @@ export const generateShadcnUI = async () => {
   }
   const config = getConfig();
   const componentFolder = config.get<string>("componentFolder");
-  const location = componentFolder
-    ? componentFolder
-    : await getUserInput("Where do you want to generate the shadcn/ui components?", "/app/components/ui");
+  const location = componentFolder ? componentFolder : "/app/components/ui";
   if (!location) {
     return;
   }
-
+  const loc = await tryReadDirectory(joinPath(rootDirPath, location));
+  if (!loc) {
+    await vscode.workspace.fs.createDirectory(joinPath(rootDirPath, location));
+  }
   const outputLocation = sanitizePath(location);
 
   // Add the provided component folder path to the config
@@ -98,13 +100,14 @@ export const generateShadcnUI = async () => {
   const componentsToGenerate = pickedComponents.map((component) => component.key).join(" ");
 
   await runCommandWithPrompt({
-    command: `npx shadcn-ui add ${componentsToGenerate}`,
+    command: `npx shadcn-ui@latest add ${componentsToGenerate}`,
     title: "Generating shadcn/ui components",
     promptHandler: async (process, resolve) => {
       // Write the output location to the input stream (this gets asked by the CLI)
-      process.stdin?.write(`.${outputLocation}\n`);
+      process.stdin?.write(`y\n`);
       // End the input stream
       process.stdin?.end();
+
       // Wait for the command to finish
       process.stdout?.on("end", resolve);
     },
