@@ -18,6 +18,7 @@ import { ComponentLens } from "./code-lenses/ComponentLens";
 import { LoaderLens } from "./code-lenses/LoaderLens";
 import { ActionLens } from "./code-lenses/ActionLens";
 import { checkRemixVersion } from "./startup/checkRemixVersion";
+import { generateRemixPartial } from "./commands/editorContext";
 
 const generateCommand = (command: string) => `remix-forge.${command}`;
 
@@ -29,6 +30,27 @@ export function activate(context: vscode.ExtensionContext) {
   const updateRemixCommand = vscode.commands.registerCommand(generateCommand("updateRemix"), updateRemix);
   const generatePrismaCommand = vscode.commands.registerCommand(generateCommand("generatePrisma"), generatePrisma);
   const generateTestsCommand = vscode.commands.registerCommand(generateCommand("generateTests"), generateTests);
+  const generateLoaderCommand = vscode.commands.registerCommand(generateCommand("generateLoader"), () =>
+    generateRemixPartial("loader")
+  );
+  const generateActionCommand = vscode.commands.registerCommand(generateCommand("generateAction"), () =>
+    generateRemixPartial("action")
+  );
+  const generateErrorBoundaryCommand = vscode.commands.registerCommand(generateCommand("generateErrorBoundary"), () =>
+    generateRemixPartial("errorBoundary")
+  );
+  const generateMetaCommand = vscode.commands.registerCommand(generateCommand("generateMeta"), () =>
+    generateRemixPartial("meta")
+  );
+  const generateHeadersCommand = vscode.commands.registerCommand(generateCommand("generateHeaders"), () =>
+    generateRemixPartial("headers")
+  );
+  const generateLinksCommand = vscode.commands.registerCommand(generateCommand("generateLinks"), () =>
+    generateRemixPartial("links")
+  );
+  const generateRevalidateCommand = vscode.commands.registerCommand(generateCommand("generateRevalidate"), () =>
+    generateRemixPartial("revalidate")
+  );
   const lintingCommand = vscode.commands.registerCommand(generateCommand("linting"), linting);
   const initShadcnUiCommand = vscode.commands.registerCommand(generateCommand("initShadcnUi"), initShadcnUi);
   const generateShadcnUICommand = vscode.commands.registerCommand(
@@ -73,7 +95,14 @@ export function activate(context: vscode.ExtensionContext) {
     generateTestsCommand,
     lintingCommand,
     initShadcnUiCommand,
-    generateShadcnUICommand
+    generateShadcnUICommand,
+    generateLoaderCommand,
+    generateActionCommand,
+    generateErrorBoundaryCommand,
+    generateMetaCommand,
+    generateHeadersCommand,
+    generateLinksCommand,
+    generateRevalidateCommand
   );
   // Do all the startup checks after this line
   checkRemixVersion();

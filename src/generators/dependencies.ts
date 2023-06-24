@@ -1,6 +1,10 @@
 import { WorkspaceConfiguration } from "vscode";
 
-export const generateDependencies = (config: WorkspaceConfiguration, selectedGenerators: string[]) => {
+export const generateDependencies = (
+  config: WorkspaceConfiguration,
+  selectedGenerators: string[],
+  shouldIncludeLoaderData: boolean = true
+) => {
   const runtimeDependency = config.get("runtimeDependency") || "@remix-run/node";
   const actionImports = config.get("customActionImports") || "";
   const loaderImports = config.get("customLoaderImports") || "";
@@ -19,7 +23,7 @@ export const generateDependencies = (config: WorkspaceConfiguration, selectedGen
   }
   if (selectedGenerators.includes("loader")) {
     remixDeps.push("LoaderArgs");
-    reactDeps.push("useLoaderData");
+    if (shouldIncludeLoaderData) reactDeps.push("useLoaderData");
   }
   if (selectedGenerators.includes("action")) {
     remixDeps.push("ActionArgs");
@@ -31,7 +35,10 @@ export const generateDependencies = (config: WorkspaceConfiguration, selectedGen
     reactDeps.push("isRouteErrorResponse", "useRouteError");
   }
 
-  const output = [...(actionImports ? [actionImports] : []), ...(loaderImports ? [loaderImports] : [])];
+  const output = [
+    ...(actionImports && selectedGenerators.includes("action") ? [actionImports] : []),
+    ...(loaderImports && selectedGenerators.includes("loader") ? [loaderImports] : []),
+  ];
 
   if (metaDeps.length) {
     output.push(`import type { ${metaDeps.join(", ")} } from "@remix-run/react/dist/routeModules";`);

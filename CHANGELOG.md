@@ -1,6 +1,12 @@
 # Change Log
 
 All notable changes to the "remix-forge" extension will be documented in this file. 
+## [0.3.4] 
+### Added
+- Ability to insert code snippets in your active editor
+### Modified
+- No longer allows you to generate shadcn-ui components if you don't have a components.json file in your project
+
 ## [0.3.3] 
 ### Modified
 - Full revamp of the shadcn-ui init and generate commands to support the new CLI

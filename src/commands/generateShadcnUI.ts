@@ -8,7 +8,7 @@ import {
   tryReadDirectory,
   writeToFile,
 } from "../utils/vscode";
-import { getRootDirPath, tryReadFile } from "../utils/file";
+import { getRootDir, getRootDirPath, tryReadFile } from "../utils/file";
 import { getConfig, updateConfig } from "../config";
 
 const availableComponentList = [
@@ -69,8 +69,15 @@ const getAvailableComponents = async (rootDirPath: vscode.Uri, outputLocation: s
 };
 
 export const generateShadcnUI = async () => {
-  const rootDirPath = getRootDirPath();
-  if (!rootDirPath) {
+  const rootDir = getRootDir();
+  if (!rootDir) {
+    return;
+  }
+  const initialized = await tryReadFile(joinPath(rootDir, "components.json"));
+  if (!initialized) {
+    vscode.window.showErrorMessage(
+      "Shadcn UI is not initialized in this project. (components.json declaration missing)"
+    );
     return;
   }
   const config = getConfig();
@@ -79,16 +86,16 @@ export const generateShadcnUI = async () => {
   if (!location) {
     return;
   }
-  const loc = await tryReadDirectory(joinPath(rootDirPath, location));
+  const loc = await tryReadDirectory(joinPath(rootDir, location));
   if (!loc) {
-    await vscode.workspace.fs.createDirectory(joinPath(rootDirPath, location));
+    await vscode.workspace.fs.createDirectory(joinPath(rootDir, location));
   }
   const outputLocation = sanitizePath(location);
 
   // Add the provided component folder path to the config
   updateConfig("componentFolder", outputLocation);
 
-  const availableComponents = await getAvailableComponents(rootDirPath, outputLocation);
+  const availableComponents = await getAvailableComponents(rootDir, outputLocation);
 
   const pickedComponents = await getMultiplePickableOptions(availableComponents, {
     title: "Select components to generate",
@@ -114,7 +121,7 @@ export const generateShadcnUI = async () => {
   });
   // Fix up files
   for (const component of pickedComponents) {
-    const fileLocation = joinPath(rootDirPath, outputLocation, `${component.key}.tsx`);
+    const fileLocation = joinPath(rootDir, outputLocation, `${component.key}.tsx`);
     const file = await tryReadFile(fileLocation.path);
     if (!file) {
       continue;

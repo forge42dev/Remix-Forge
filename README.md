@@ -3,6 +3,7 @@
 Remix Forge - A VS Code extension for Remix.run applications that super charges your development with a ever-growing set of functionalities.
 
 ## Whats new?
+- Added ability to inject code snippets into your active editor via right-click
 - Added ability to initialize a project for shadcn/ui components in Remix
 - Added ability to generate all supported components by the shadcn/ui CLI
 - Added ability to initialize eslint and prettier in your Remix project
@@ -12,6 +13,10 @@ Remix Forge - A VS Code extension for Remix.run applications that super charges 
 - Added ability to generate the whole authentication scaffolding for Remix applications with a single click 
 - Added a notification on startup that lets you know there is a new version of Remix.run available
 ## Features
+
+### Insert Remix code snippets in your current editor
+
+Right click the line where you want to insert a snippet and click the corresponding command you want to run. This will insert the snippet in your current editor at the line you right clicked. (eg. insert loader => inserts loader into the file)
 
 ### Get your Remix project shadcn/ui ready
 
@@ -115,6 +120,12 @@ This is useful for when you want to import a lot of imports from a directory and
 
 ## Usage
 
+## Inserting snippets
+Here is an example video of the basic usage:
+
+<video src="https://raw.githubusercontent.com/Code-Forge-Net/Remix-Forge/main/inserts-demo.mp4" controls="controls" style="max-width: 730px;">
+</video>
+
 ## Shadcn/ui Generation
 Here is an example video of the basic usage:
 
@@ -194,8 +205,14 @@ This extension contributes the following configuration settings:
 - [ ] Add ability to generate a component name based on the route name
 
 ## Release Notes 
+
+## 0.3.4
+
+- Added ability to insert code snippets into your active editor window via right-click
+
 ## 0.3.3 
 - Full revamp of the shadcn-ui init and generate commands to support the new CLI
+
 ## 0.3.1 
 - `remix-forge.latestRemixNotification` - Allows you to disable the notification that shows up when a new version of Remix is available (`default is true`).
 - Added a notification on startup that lets you know there is a new version of Remix.run available
