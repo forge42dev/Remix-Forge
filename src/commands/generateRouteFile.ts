@@ -1,19 +1,23 @@
 import * as vscode from "vscode";
 import { EXTENSION_CONFIG_SECTION, defaultGenerationOrder } from "../config";
-import { generatorOptions, GENERATORS, Generator } from "../generators";
+import { generatorOptions, GENERATORS, Generator, GeneratorOption } from "../generators";
 
-export const generateRouteFile = async (uri: vscode.Uri) => {
+export const generateRouteFile = async (uri: vscode.Uri, _: any, name?: string, opts?: GeneratorOption[]) => {
   const config = vscode.workspace.getConfiguration(EXTENSION_CONFIG_SECTION);
 
-  const fileName = await vscode.window.showInputBox({
-    prompt: "Enter the name of the route to generate",
-  });
+  const fileName = name
+    ? name
+    : await vscode.window.showInputBox({
+        prompt: "Enter the name of the route to generate",
+      });
 
   if (fileName) {
-    const options = await vscode.window.showQuickPick(generatorOptions(config), {
-      canPickMany: true,
-      title: "Select the segments you want to generate",
-    });
+    const options = opts
+      ? opts
+      : await vscode.window.showQuickPick(generatorOptions(config), {
+          canPickMany: true,
+          title: "Select the segments you want to generate",
+        });
 
     const filePath = vscode.Uri.joinPath(uri, fileName + ".tsx");
     if (options?.length) {

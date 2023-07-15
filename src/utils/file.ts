@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import * as ts from "typescript";
+import { sanitizePath } from "./vscode";
 export const getRootDirPath = () => {
   const path = vscode.workspace.workspaceFolders?.[0].uri.path;
   if (!path) {
@@ -30,7 +31,7 @@ export const getFileInfo = (filePath: string) => {
   const fileNameWithoutExtension = getFileNameWithoutExtension(fileName);
   return { fileName, fileNameExtension, fileNameWithoutExtension };
 };
-async function openFileInEditor(filePath: string) {
+export async function openFileInEditor(filePath: string) {
   const uri = vscode.Uri.file(filePath);
   const document = await vscode.workspace.openTextDocument(uri);
   return vscode.window.showTextDocument(document);
@@ -249,6 +250,20 @@ export const tryReadFile = async (filePath: string | vscode.Uri) => {
     return null;
   }
 };
+/**
+ * Gets the file content of the provided file path
+ * @param filePath File path to read
+ * @returns Returns the file content as a string or null if the file does not exist
+ */
+export const tryReadFilePath = async (filePath: string | vscode.Uri) => {
+  const location = typeof filePath === "string" ? vscode.Uri.file(filePath) : filePath;
+  try {
+    await vscode.workspace.fs.readFile(location);
+    return location;
+  } catch (e) {
+    return null;
+  }
+};
 
 /**
  * Adds imports to a provided import statement by modifing the existing file content
@@ -275,4 +290,43 @@ export const addImportsToImportStatement = (importStatement: string, importsToAd
       return `import { ${importsToAdd} } from${originalImportStatement}`;
     }
   });
+};
+
+/**
+ * Helper method used to convert remix route conventions to url segments
+ * @param chunk Chunk to convert
+ * @returns Returns the converted chunk
+ */
+export const convertRemixPathToUrl = (chunk: string) => {
+  if (chunk.startsWith("__") || chunk.startsWith("_") || chunk.includes("index") || chunk.includes("route")) {
+    return "";
+  }
+  return chunk.replace(/_/g, "").replace(/\[/g, ":").replace(/\]/g, "").replace("+", "");
+};
+/**
+ * Method to generate the final path to open in browser
+ * @param prefix Url prefix eg http://localhost:3000
+ * @param path Path of the file
+ * @param urlGenerator Optional generator function
+ * @returns Returns the final path to open in browser
+ */
+export const generatePath = (path: string, urlGenerator: string | undefined) => {
+  // Generate the path based on the urlGenerator function if one is provided
+  const generatedPath = urlGenerator ? eval(urlGenerator)(path) : undefined;
+  // If the path is generated, return it
+  if (generatedPath) {
+    return sanitizePath(generatedPath);
+  }
+  // Otherwise, generate the path based on the file path, gets the path after the routes folder and splits everything by the dot
+  const pathChunks = path.split("routes/")[1].split(".");
+  // Removes the extension from the path
+  const pathChunksWithoutExtension = pathChunks.slice(0, pathChunks.length - 1).join("/");
+  // Converts the path to a URL by splitting the path by the slash, removing unneeded segments and joining everything back together
+  const sanitizedPathChunks = pathChunksWithoutExtension
+    .split("/")
+    .map((chunk) => convertRemixPathToUrl(chunk))
+    .filter((chunk) => chunk !== "")
+    .join("/");
+
+  return sanitizePath(sanitizedPathChunks);
 };

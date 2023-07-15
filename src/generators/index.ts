@@ -26,7 +26,7 @@ export const GENERATORS = {
 
 export type Generator = keyof typeof GENERATORS;
 
-interface GeneratorOption {
+export interface GeneratorOption {
   label: string;
   description: string;
   key: Exclude<Generator, "dependencies" | "component">;

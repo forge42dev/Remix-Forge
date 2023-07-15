@@ -2,7 +2,7 @@
   "name": "remix-forge",
   "displayName": "Remix Forge",
   "description": "Remix Forge - A VS Code extension for Remix.run applications that super charges your development with a ever-growing set of functionalities.",
-  "version": "0.3.4",
+  "version": "0.4.0",
   "icon": "./remix-forge-logo.png",
   "keywords": [
     "Remix",
@@ -262,6 +262,11 @@
           "type": "boolean",
           "default": true,
           "description": "Whether to show a notification when a new version of Remix is available"
+        },
+        "remix-forge.devToolsPort": {
+          "type": "number",
+          "default": 3003,
+          "description": "Port number that allows the Remix dev tools to communicate with the extension"
         }
       }
     },
@@ -321,6 +326,10 @@
       {
         "command": "remix-forge.generateRemixFormRoute",
         "title": "Generate Remix Form Route"
+      },
+      {
+        "command": "remix-forge.devTools",
+        "title": "Start Remix Dev Tools"
       },
       {
         "command": "remix-forge.generateAuth",
@@ -446,7 +455,8 @@
     "watch-tests": "tsc -p . -w --outDir out",
     "pretest": "npm run compile-tests && npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js"
+    "test": "node ./out/test/runTest.js",
+    "dev": "npm run watch"
   },
   "repository": {
     "type": "git",
@@ -457,6 +467,7 @@
     "@types/mocha": "^10.0.1",
     "@types/node": "16.x",
     "@types/vscode": "^1.78.0",
+    "@types/ws": "^8.5.5",
     "@typescript-eslint/eslint-plugin": "^5.59.1",
     "@typescript-eslint/parser": "^5.59.1",
     "@vscode/test-electron": "^2.3.0",
@@ -467,5 +478,8 @@
     "typescript": "^5.1.3",
     "webpack": "^5.81.0",
     "webpack-cli": "^5.0.2"
+  },
+  "dependencies": {
+    "ws": "^8.13.0"
   }
 }

@@ -1,6 +1,11 @@
 # Change Log
 
 All notable changes to the "remix-forge" extension will be documented in this file. 
+
+## [0.4.0]
+### Added
+- Ability to connect Remix Dev Tools to your project
+
 ## [0.3.4] 
 ### Added
 - Ability to insert code snippets in your active editor

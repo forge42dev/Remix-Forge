@@ -206,6 +206,9 @@ This extension contributes the following configuration settings:
 
 ## Release Notes 
 
+## 0.4.0
+- Added Remix Dev Tools connectivity to the extension
+
 ## 0.3.4
 
 - Added ability to insert code snippets into your active editor window via right-click

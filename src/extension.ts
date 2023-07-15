@@ -19,8 +19,9 @@ import { LoaderLens } from "./code-lenses/LoaderLens";
 import { ActionLens } from "./code-lenses/ActionLens";
 import { checkRemixVersion } from "./startup/checkRemixVersion";
 import { generateRemixPartial } from "./commands/editorContext";
-
-const generateCommand = (command: string) => `remix-forge.${command}`;
+import { startDevTools } from "./commands/devTools";
+import { generateCommand } from "./utils/vscode";
+import { createStatusBar } from "./utils/statusBar";
 
 export function activate(context: vscode.ExtensionContext) {
   const flattenRoutesCommand = vscode.commands.registerCommand(generateCommand("flattenRoutes"), flattenRoutes);
@@ -74,6 +75,15 @@ export function activate(context: vscode.ExtensionContext) {
   const loaderLens = new LoaderLens();
   const actionLens = new ActionLens();
 
+  const statusBarAddition = createStatusBar();
+  const devToolsCommand = vscode.commands.registerCommand(generateCommand("devTools"), () =>
+    startDevTools(statusBarAddition)
+  );
+  // Add the status bar item to the extensions' context
+  context.subscriptions.push(statusBarAddition);
+
+  // Show the status bar item
+  statusBarAddition.show();
   // Register code-lenses
   context.subscriptions.push(
     vscode.languages.registerCodeLensProvider({ scheme: "file", language: "typescriptreact" }, codeLensProvider),
@@ -102,7 +112,8 @@ export function activate(context: vscode.ExtensionContext) {
     generateMetaCommand,
     generateHeadersCommand,
     generateLinksCommand,
-    generateRevalidateCommand
+    generateRevalidateCommand,
+    devToolsCommand
   );
   // Do all the startup checks after this line
   checkRemixVersion();

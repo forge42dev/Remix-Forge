@@ -268,3 +268,12 @@ export const tryReadDirectory = async (path: string | vscode.Uri) => {
     return [];
   }
 };
+export const tryReadFile = async (path: string | vscode.Uri) => {
+  try {
+    return await vscode.workspace.fs.readFile(typeof path === "string" ? vscode.Uri.file(path) : path);
+  } catch (e) {
+    return [];
+  }
+};
+
+export const generateCommand = (command: string) => `remix-forge.${command}`;
