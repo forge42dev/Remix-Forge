@@ -11,9 +11,9 @@ export const generateDependencies = (
   const reactDeps = [];
   const remixDeps = [];
   const reactTypeDeps = [];
-  const metaDeps = [];
+
   if (selectedGenerators.includes("meta")) {
-    metaDeps.push("V2_MetaFunction");
+    reactDeps.push("V2_MetaFunction");
   }
   if (selectedGenerators.includes("headers")) {
     remixDeps.push("HeadersFunction");
@@ -40,9 +40,6 @@ export const generateDependencies = (
     ...(loaderImports && selectedGenerators.includes("loader") ? [loaderImports] : []),
   ];
 
-  if (metaDeps.length) {
-    output.push(`import type { ${metaDeps.join(", ")} } from "@remix-run/react/dist/routeModules";`);
-  }
   if (remixDeps.length) {
     output.push(`import type { ${remixDeps.join(", ")} } from "${runtimeDependency}";`);
   }

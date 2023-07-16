@@ -1,6 +1,9 @@
 # Change Log
 
 All notable changes to the "remix-forge" extension will be documented in this file. 
+## [0.4.1]
+### Modified
+- Changed import for v2 meta function
 
 ## [0.4.0]
 ### Added
