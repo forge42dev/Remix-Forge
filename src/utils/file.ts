@@ -265,6 +265,16 @@ export const tryReadFilePath = async (filePath: string | vscode.Uri) => {
   }
 };
 
+export const isTSConfigExists = async (rootDir: vscode.Uri) => {
+  try {
+    const tsconfigPath = vscode.Uri.joinPath(rootDir, "tsconfig.json");
+    const content = await tryReadFile(tsconfigPath);
+    return content !== null;
+  } catch {
+    return false;
+  }
+};
+
 /**
  * Adds imports to a provided import statement by modifing the existing file content
  * @param importStatement Import statement to add to (can be a partial)
