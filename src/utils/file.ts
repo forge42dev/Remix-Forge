@@ -1,12 +1,12 @@
 import * as vscode from "vscode";
-import * as ts from "typescript";
-import { sanitizePath } from "./vscode";
+
+import { getWorkspacePath, sanitizePath } from "./vscode";
 export const getRootDirPath = () => {
-  const path = vscode.workspace.workspaceFolders?.[0].uri.path;
+  const path = getRootDir();
   if (!path) {
     return;
   }
-  const rootDir: vscode.Uri = vscode.Uri.file(path);
+  const rootDir: vscode.Uri = vscode.Uri.file(path.path);
   return rootDir;
 };
 
@@ -47,7 +47,11 @@ export type FileSearchStrategy = "all" | "one-up" | "sub";
 
 export const getRootDir = () => {
   try {
-    const rootDir: vscode.Uri = vscode.Uri.file(vscode.workspace.workspaceFolders![0].uri.path!);
+    const rootPath = getWorkspacePath();
+    if (!rootPath) {
+      return;
+    }
+    const rootDir: vscode.Uri = vscode.Uri.file(rootPath);
     return rootDir;
   } catch (e) {}
 };

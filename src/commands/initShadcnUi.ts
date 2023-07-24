@@ -200,6 +200,10 @@ export const initShadcnUi = async (uri: vscode.Uri) => {
         if (data.toString().includes("Write configuration to components.json") && commands[8].runTimes > 0) {
           process.stdin?.write(commands[8].command);
           commands[8].runTimes = commands[8].runTimes - 1;
+        }
+        if (data.toString().includes("Would you like to use TypeScript") && commands[9].runTimes > 0) {
+          process.stdin?.write(commands[9].command);
+          commands[9].runTimes = commands[9].runTimes - 1;
           process.stdin?.end();
         }
       });
@@ -270,5 +274,7 @@ const generateCLICommands = async (cssName: string) => {
   commands.push({ command: "\x1B[D\x0D", runTimes: 1 });
   // write components.json config
   commands.push({ command: `Y\x0D`, runTimes: 1 });
+  // ts command
+  commands.push({ command: "\x0D", runTimes: 1 });
   return commands;
 };

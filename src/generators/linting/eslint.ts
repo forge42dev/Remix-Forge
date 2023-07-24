@@ -15,7 +15,9 @@ export const generateEslintConfig = () => {
 
 export const extendPackageJsonWithLinting = async () => {
   const pkg = await getPackageJson();
-  const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri;
+  const rootPath = getWorkspacePath();
+  if (!rootPath) return;
+  const workspaceRoot = vscode.Uri.parse(rootPath);
   if (!workspaceRoot) return;
 
   if (!pkg.scripts.lint) {

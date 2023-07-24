@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { askInstallDependenciesPrompt, getPackageJson, runCommand } from "../utils/vscode";
+import { askInstallDependenciesPrompt, getPackageJson, getWorkspacePath, runCommand } from "../utils/vscode";
 import { generatePrismaDBFile } from "../generators/prisma/db.server";
 import { generateSeedFile } from "../generators/prisma/seed";
 
@@ -27,7 +27,9 @@ export const DB_SOURCE_OPTIONS: DB_SOURCE_OPTION[] = [
 ];
 
 export const generatePrisma = async (uri: vscode.Uri) => {
-  const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri;
+  const rootPath = getWorkspacePath();
+  if (!rootPath) return;
+  const workspaceRoot = vscode.Uri.parse(rootPath);
   if (!workspaceRoot) return;
 
   const prismaFolder = vscode.Uri.joinPath(workspaceRoot, "prisma");

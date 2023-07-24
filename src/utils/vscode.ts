@@ -1,5 +1,6 @@
 import { ChildProcess, exec } from "child_process";
 import * as vscode from "vscode";
+import * as fs from "fs";
 
 export const commandWithLoading = async (title: string, action: (...args: any[]) => Promise<void> | void) => {
   await vscode.window.withProgress(
@@ -33,18 +34,73 @@ export const commandWithLoading = async (title: string, action: (...args: any[])
   return;
 };
 
-export const getWorkspacePath = () => {
+export const getWorkspaceFSPath = () => {
   const workspaceFolders = vscode.workspace.workspaceFolders;
   if (!workspaceFolders || workspaceFolders.length === 0) {
     return undefined; // No workspace folders found
   }
 
   const workspaceFolderPath = workspaceFolders[0].uri.fsPath;
+
+  const activeTextEditor = vscode.window.activeTextEditor;
+  if (!activeTextEditor || !activeTextEditor.document) {
+    return workspaceFolderPath; // No active text editor or document
+  }
+
+  // Get the current file's path
+  const currentFilePath = activeTextEditor.document.uri;
+
+  // Traverse upwards from the current file's path
+  let currentDir = joinPath(currentFilePath, "..");
+
+  while (currentDir.fsPath !== workspaceFolderPath) {
+    if (fs.existsSync(joinPath(currentDir, "package.json").fsPath)) {
+      return currentDir.fsPath;
+    }
+    if (currentDir.path.length < 5) {
+      return workspaceFolderPath;
+    }
+
+    currentDir = joinPath(currentDir, "..");
+  }
+
+  return workspaceFolderPath;
+};
+export const getWorkspacePath = () => {
+  const workspaceFolders = vscode.workspace.workspaceFolders;
+  if (!workspaceFolders || workspaceFolders.length === 0) {
+    return undefined; // No workspace folders found
+  }
+
+  const workspaceFolderPath = workspaceFolders[0].uri.path;
+
+  const activeTextEditor = vscode.window.activeTextEditor;
+  if (!activeTextEditor || !activeTextEditor.document) {
+    return workspaceFolderPath; // No active text editor or document
+  }
+
+  // Get the current file's path
+  const currentFilePath = activeTextEditor.document.uri;
+
+  // Traverse upwards from the current file's path
+  let currentDir = joinPath(currentFilePath, "..");
+
+  while (currentDir.path !== workspaceFolderPath) {
+    if (fs.existsSync(joinPath(currentDir, "package.json").path)) {
+      return currentDir.path;
+    }
+    if (currentDir.path.length < 5) {
+      return workspaceFolderPath;
+    }
+
+    currentDir = joinPath(currentDir, "..");
+  }
+
   return workspaceFolderPath;
 };
 
 export async function getPackageJson() {
-  const workspaceFolderPath = getWorkspacePath();
+  const workspaceFolderPath = getWorkspaceFSPath();
   if (!workspaceFolderPath) {
     return undefined;
   }
@@ -89,7 +145,7 @@ export async function getDevDependenciesArray() {
 }
 
 export const getPackageManager = async () => {
-  const workspaceFolderPath = getWorkspacePath();
+  const workspaceFolderPath = getWorkspaceFSPath();
   if (!workspaceFolderPath) {
     return undefined;
   }
@@ -164,8 +220,9 @@ export const runCommand = async ({ command, title, errorMessage, callback }: Run
   await commandWithLoading(title, () => {
     // Run npm install command
     return new Promise((resolve) => {
-      exec(`${command}`, { cwd: getWorkspacePath() }, async (error, stdout, stderr) => {
+      exec(`${command}`, { cwd: getWorkspaceFSPath() }, async (error, stdout, stderr) => {
         if (error) {
+          console.log(error);
           vscode.window.showErrorMessage(`Error: ${errorMessage}`);
           return resolve();
         }
@@ -192,8 +249,13 @@ export const runCommandWithPrompt = async ({ command, title, promptHandler }: Ru
   await commandWithLoading(title, () => {
     // Run npm install command
     return new Promise(async (resolve) => {
-      const process = exec(`${command}`, { cwd: getWorkspacePath() });
-
+      const process = exec(`${command}`, { cwd: getWorkspaceFSPath() });
+      process.stderr?.on("data", (data) => {
+        console.error(`stderr: ${data}`);
+      });
+      process.stdout?.on("data", (data) => {
+        console.error(`stdout: ${data}`);
+      });
       await promptHandler(process, resolve);
     });
   });
