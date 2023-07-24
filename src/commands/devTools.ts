@@ -3,7 +3,7 @@ import type { MessageEvent, WebSocket } from "ws";
 /* import { getAllRemixRoutes } from "../devTools/allRoutes";
 import { getProjectCommands } from "../devTools/getProjectCommands";
 import { runTerminalCommands } from "../devTools/runTerminalCommands"; */
-import { getRootDir, openFileInEditor, tryReadFile, tryReadFilePath } from "../utils/file";
+import { getRootDir, isTSConfigExists, openFileInEditor, tryReadFile, tryReadFilePath } from "../utils/file";
 import { joinPath } from "../utils/vscode";
 import * as vscode from "vscode";
 import { setStatusBarToRunning, setStatusBarToStopped } from "../utils/statusBar";
@@ -34,6 +34,8 @@ export const startDevTools = async (statusBarItem: vscode.StatusBarItem) => {
     return undefined;
   }
 
+  const isTS = await isTSConfigExists(rootDir);
+
   // Handle WebSocket connection
   wss.on("connection", (socket: WebSocket) => {
     // Handle messages received from the React app
@@ -58,23 +60,24 @@ export const startDevTools = async (statusBarItem: vscode.StatusBarItem) => {
       }
 
       if (message.type === "open-vscode") {
-        const path = joinPath(rootDir, "app", message.data.route).path + ".tsx";
+        const ext = isTS ? ".tsx" : ".jsx";
+        const path = joinPath(rootDir, "app", message.data.route).path;
 
         try {
-          const ts = await tryReadFilePath(joinPath(rootDir, "app", message.data.route).path + ".tsx");
-          if (ts) {
-            await openFileInEditor(ts.path);
+          const fileLocation = await tryReadFilePath(path + ext);
+          if (fileLocation) {
+            await openFileInEditor(fileLocation.path);
             return;
           }
 
-          const tsNew = await tryReadFilePath(joinPath(rootDir, "app", message.data.route).path + "/route.tsx");
+          const fileLocationNew = await tryReadFilePath(path + `/route${ext}`);
 
-          if (tsNew) {
-            await openFileInEditor(tsNew.path);
+          if (fileLocationNew) {
+            await openFileInEditor(fileLocationNew.path);
             return;
           }
         } catch (err) {}
-        await vscode.commands.executeCommand("vscode.open", vscode.Uri.file(path));
+        await vscode.commands.executeCommand("vscode.open", vscode.Uri.file(path + ext));
       }
       /* if (message.type === "routes") {
         const routes = await getAllRemixRoutes();
