@@ -2,7 +2,7 @@
   "name": "remix-forge",
   "displayName": "Remix Forge",
   "description": "Remix Forge - A VS Code extension for Remix.run applications that super charges your development with a ever-growing set of functionalities.",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "icon": "./remix-forge-logo.png",
   "keywords": [
     "Remix",
@@ -480,6 +480,8 @@
     "webpack-cli": "^5.0.2"
   },
   "dependencies": {
+    "execa": "^7.1.1",
+    "pidtree": "^0.6.0",
     "ws": "^8.13.0"
   }
 }

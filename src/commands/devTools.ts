@@ -9,6 +9,7 @@ import { setStatusBarToRunning, setStatusBarToStopped } from "../utils/statusBar
 import { generateRouteFile } from "./generateRouteFile";
 import { GeneratorOption } from "../generators";
 import { getConfig } from "../config";
+import { killtree } from "../devTools/killProcess";
 
 let wss: Server | undefined;
 // Create a WebSocket server
@@ -58,7 +59,11 @@ export const startDevTools = async (statusBarItem: vscode.StatusBarItem) => {
         await generateRouteFile(joinPath(rootDir, "app", "routes"), "", path, generatorOptions);
       }
       if (message.type === "kill") {
-        process.kill(message.processId);
+        try {
+          await killtree(message.processId);
+        } catch (err) {
+          // console.log(err);
+        }
         socket.send(JSON.stringify({ type: "terminal_command", subtype: "EXIT", terminalId: message.terminalId }));
       }
       if (message.type === "open-vscode") {
