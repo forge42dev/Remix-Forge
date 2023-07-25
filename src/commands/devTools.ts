@@ -1,8 +1,7 @@
 import { Server } from "ws";
 import type { MessageEvent, WebSocket } from "ws";
-/* import { getAllRemixRoutes } from "../devTools/allRoutes";
 import { getProjectCommands } from "../devTools/getProjectCommands";
-import { runTerminalCommands } from "../devTools/runTerminalCommands"; */
+import { runTerminalCommands } from "../devTools/runTerminalCommands";
 import { getRootDir, isTSConfigExists, openFileInEditor, tryReadFile, tryReadFilePath } from "../utils/file";
 import { joinPath } from "../utils/vscode";
 import * as vscode from "vscode";
@@ -42,9 +41,9 @@ export const startDevTools = async (statusBarItem: vscode.StatusBarItem) => {
     socket.onmessage = async (event: MessageEvent) => {
       const message = JSON.parse(event.data.toString());
 
-      /* if (message.type === "terminal_command") {
-        runTerminalCommands(socket, message.command);
-      } */
+      if (message.type === "terminal_command") {
+        runTerminalCommands(socket, message.command, message.terminalId, wss!);
+      }
       if (message.type === "add_route") {
         const path = message.path;
         const options = message.options;
@@ -58,7 +57,10 @@ export const startDevTools = async (statusBarItem: vscode.StatusBarItem) => {
 
         await generateRouteFile(joinPath(rootDir, "app", "routes"), "", path, generatorOptions);
       }
-
+      if (message.type === "kill") {
+        process.kill(message.processId);
+        socket.send(JSON.stringify({ type: "terminal_command", subtype: "EXIT", terminalId: message.terminalId }));
+      }
       if (message.type === "open-vscode") {
         const ext = isTS ? ".tsx" : ".jsx";
         const path = joinPath(rootDir, "app", message.data.route).path;
@@ -79,14 +81,11 @@ export const startDevTools = async (statusBarItem: vscode.StatusBarItem) => {
         } catch (err) {}
         await vscode.commands.executeCommand("vscode.open", vscode.Uri.file(path + ext));
       }
-      /* if (message.type === "routes") {
-        const routes = await getAllRemixRoutes();
-        socket.send(JSON.stringify({ type: "routes", data: routes?.map((route) => route.url) }));
-      } */
-      /*  if (message.type === "commands") {
+
+      if (message.type === "commands") {
         const commands = await getProjectCommands();
         socket.send(JSON.stringify({ type: "commands", data: commands }));
-      } */
+      }
       /*  if (message.type === "get_file") {
         const routes = await getAllRemixRoutes();
         const path = routes?.find((r) => r.url === message.data)?.path;
