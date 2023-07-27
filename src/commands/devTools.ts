@@ -42,6 +42,51 @@ export const startDevTools = async (statusBarItem: vscode.StatusBarItem) => {
     socket.onmessage = async (event: MessageEvent) => {
       const message = JSON.parse(event.data.toString());
 
+      if (message.type === "plugin") {
+        if (message.subtype === "read_file") {
+          const file = await tryReadFile(joinPath(rootDir, message.path).path);
+          if (file) {
+            return socket.send(JSON.stringify({ type: "plugin", subtype: "read_file", error: false, data: file }));
+          }
+          socket.send(JSON.stringify({ type: "plugin", subtype: "read_file", error: true, data: "File not found" }));
+        }
+        if (message.subtype === "open_file") {
+          try {
+            await openFileInEditor(joinPath(rootDir, message.path).path);
+            socket.send(JSON.stringify({ type: "plugin", subtype: "open_file", error: false, data: "success" }));
+          } catch (err) {
+            socket.send(
+              JSON.stringify({ type: "plugin", subtype: "open_file", error: true, data: (err as any)?.message })
+            );
+          }
+        }
+        if (message.subtype === "write_file") {
+          try {
+            const path = await tryReadFilePath(joinPath(rootDir, message.path).path);
+            if (path) {
+              await vscode.workspace.fs.writeFile(path, Buffer.from(message.data));
+            }
+          } catch (err) {
+            socket.send(
+              JSON.stringify({ type: "plugin", subtype: "write_file", error: true, data: (err as any)?.message })
+            );
+          }
+        }
+        if (message.subtype === "delete_file") {
+          try {
+            const path = await tryReadFilePath(joinPath(rootDir, message.path).path);
+            console.log(path);
+            if (path) {
+              await vscode.workspace.fs.delete(path);
+            }
+            socket.send(JSON.stringify({ type: "plugin", subtype: "delete_file", error: false, data: "success" }));
+          } catch (err) {
+            socket.send(
+              JSON.stringify({ type: "plugin", subtype: "delete_file", error: true, data: (err as any)?.message })
+            );
+          }
+        }
+      }
       if (message.type === "terminal_command") {
         runTerminalCommands(socket, message.command, message.terminalId, wss!);
       }
