@@ -5,5 +5,5 @@ export const generateLoader = (config: WorkspaceConfiguration) => {
   if (customLoader) {
     return customLoader + "\n";
   }
-  return [`export const loader = async ({ request }: LoaderArgs) => {`, `  return null;`, `};`].join("\n");
+  return [`export const loader = async ({ request }: LoaderFunctionArgs) => {`, `  return null;`, `};`].join("\n");
 };

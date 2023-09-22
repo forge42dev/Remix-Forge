@@ -3,11 +3,11 @@ import { WorkspaceConfiguration } from "vscode";
 export const dashboardFileContent = (config: WorkspaceConfiguration) => {
   const runtimeDependency = config.get("runtimeDependency") || "@remix-run/node";
   return [
-    `import type { LoaderArgs } from '${runtimeDependency}';`,
+    `import type { LoaderFunctionArgs } from '${runtimeDependency}';`,
     "import { useLoaderData, Form } from '@remix-run/react';",
     "import { authenticator } from '~/services/auth.server';",
     "",
-    "export const loader = async ({ request }: LoaderArgs) => {",
+    "export const loader = async ({ request }: LoaderFunctionArgs) => {",
     "  await authenticator.isAuthenticated(request, {",
     '    failureRedirect: "/login",',
     "  });",
