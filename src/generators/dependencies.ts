@@ -22,11 +22,11 @@ export const generateDependencies = (
     remixDeps.push("LinksFunction");
   }
   if (selectedGenerators.includes("loader")) {
-    remixDeps.push("LoaderArgs");
+    remixDeps.push("LoaderFunctionArgs");
     if (shouldIncludeLoaderData) reactDeps.push("useLoaderData");
   }
   if (selectedGenerators.includes("action")) {
-    remixDeps.push("ActionArgs");
+    remixDeps.push("ActionFunctionArgs");
   }
   if (selectedGenerators.includes("revalidate")) {
     reactTypeDeps.push("ShouldRevalidateFunction");

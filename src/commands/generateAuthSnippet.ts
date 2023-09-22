@@ -25,7 +25,7 @@ export const generateAuthSnippet = async (uri: vscode.Uri, type: "action" | "loa
       if (!line.includes("async")) {
         lineOutput = lineOutput.replace("=", `= async`);
       }
-      if (!line.includes("LoaderArgs") && !line.includes("ActionArgs") && !line.includes("DataFunctionArgs")) {
+      if (!line.includes("LoaderFunctionArgs") && !line.includes("ActionFunctionArgs") && !line.includes("DataFunctionArgs")) {
         shouldAddTypeImport = true;
       }
 
