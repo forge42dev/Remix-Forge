@@ -13,7 +13,7 @@ export const generateDependencies = (
   const reactTypeDeps = [];
 
   if (selectedGenerators.includes("meta")) {
-    reactDeps.push("V2_MetaFunction");
+    reactDeps.push("MetaFunction");
   }
   if (selectedGenerators.includes("headers")) {
     remixDeps.push("HeadersFunction");
