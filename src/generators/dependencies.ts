@@ -23,7 +23,7 @@ export const generateDependencies = (
   }
   if (selectedGenerators.includes("loader")) {
     remixDeps.push("LoaderFunctionArgs");
-    if (shouldIncludeLoaderData) reactDeps.push("useLoaderData");
+    if (shouldIncludeLoaderData) {reactDeps.push("useLoaderData");}
   }
   if (selectedGenerators.includes("action")) {
     remixDeps.push("ActionFunctionArgs");

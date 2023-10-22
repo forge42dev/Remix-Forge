@@ -1,12 +1,12 @@
 import * as vscode from "vscode";
-import { FileSearchStrategy, findTestFile, getFileInfo, getFilesExports, getRootDirPath } from "../utils/file";
+import { FileSearchStrategy, findTestFile, getFileInfo, getFilesExports, getRootDir } from "../utils/file";
 import { getPathDifference } from "../utils/dependencies";
 import { generateTestFile } from "../generators/test/test.file";
 import { askInstallDependenciesPrompt, commandWithLoading } from "../utils/vscode";
 import { getConfig } from "../config";
 
 export const generateTests = async (uri: vscode.Uri) => {
-  const rootDir = getRootDirPath();
+  const rootDir = await getRootDir();
   if (!rootDir) {
     return;
   }
@@ -32,7 +32,7 @@ export const generateTests = async (uri: vscode.Uri) => {
       exportNames,
       `./${fileNameWithoutExtension}`,
       vscode.Uri.joinPath(uri, "..", fileNameWithoutExtension + ".test." + fileNameExtension),
-      isRouteFile
+      isRouteFile,
     );
     askInstallDependenciesPrompt([], ["@testing-library/react"]);
   });

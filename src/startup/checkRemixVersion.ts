@@ -1,8 +1,9 @@
 import { exec } from "child_process";
-import { getPackageJson, getWorkspacePath } from "../utils/vscode";
+import { getPackageJson } from "../utils/vscode";
 import { updateRemix } from "../commands";
 import * as vscode from "vscode";
 import { getConfig } from "../config";
+import { getRootDir } from "../utils/file";
 
 export const checkRemixVersion = async () => {
   const config = getConfig();
@@ -26,7 +27,8 @@ export const checkRemixVersion = async () => {
   }
 
   const promise = new Promise<string | undefined>(async (resolve) => {
-    exec(`npm view @remix-run/react version`, { cwd: getWorkspacePath() }, (error, stdout, stderr) => {
+    const rootDir = await getRootDir();
+    exec(`npm view @remix-run/react version`, { cwd: rootDir?.fsPath }, (error, stdout, stderr) => {
       if (error) {
         return resolve(undefined);
       }
@@ -48,10 +50,10 @@ export const checkRemixVersion = async () => {
     .showInformationMessage(
       `Your Remix version is ${remixVersion.replace(
         "^",
-        ""
+        "",
       )}, but the latest version is ${version}. Do you want to update?`,
       "Yes",
-      "No"
+      "No",
     )
     .then((value) => {
       if (value === "Yes") {

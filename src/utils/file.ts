@@ -1,14 +1,5 @@
 import * as vscode from "vscode";
-import * as ts from "typescript";
 import { sanitizePath } from "./vscode";
-export const getRootDirPath = () => {
-  const path = vscode.workspace.workspaceFolders?.[0].uri.path;
-  if (!path) {
-    return;
-  }
-  const rootDir: vscode.Uri = vscode.Uri.file(path);
-  return rootDir;
-};
 
 export const getFileExtension = (fileName: string) => {
   return fileName.split(".").pop()!;
@@ -45,23 +36,68 @@ export const formatFile = async (filePath: string) => {
 
 export type FileSearchStrategy = "all" | "one-up" | "sub";
 
-export const getRootDir = () => {
+export const fileExists = async (dir: vscode.Uri, filename: string): Promise<boolean> => {
   try {
-    const rootDir: vscode.Uri = vscode.Uri.file(vscode.workspace.workspaceFolders![0].uri.path!);
-    return rootDir;
-  } catch (e) {}
+    await vscode.workspace.fs.stat(vscode.Uri.joinPath(dir, filename));
+    return true;
+  } catch (_e) {
+    return false;
+  }
+};
+
+async function directoryHasPackageJson(dir: vscode.Uri) {
+  try {
+    return await fileExists(dir, "package.json");
+  } catch (e) {
+    return false;
+  }
+}
+export async function findNearestConfigDir(dir: vscode.Uri): Promise<vscode.Uri | undefined> {
+  const hasRemixConfig = await fileExists(dir, "remix.config.js");
+  if ((await directoryHasPackageJson(dir)) && hasRemixConfig) {
+    return dir;
+  }
+
+  const files = await vscode.workspace.fs.readDirectory(dir);
+  for (const file of files) {
+    const fileType = file[1];
+    if (fileType === vscode.FileType.Directory) {
+      const foundDir = await findNearestConfigDir(vscode.Uri.joinPath(dir, file[0]));
+      if (foundDir) {
+        return foundDir;
+      }
+    }
+  }
+}
+
+export const getDirFromFileUri = (uri: vscode.Uri) => {
+  const path = uri.fsPath;
+  return vscode.Uri.file(path.substring(0, path.lastIndexOf("/")));
+};
+
+export const getRootDir = async () => {
+  const workspaceFolders = vscode.workspace.workspaceFolders;
+  if (!workspaceFolders || workspaceFolders.length === 0) {
+    return undefined; // No workspace folders found
+  }
+
+  let workspaceFolderPath = workspaceFolders[0].uri;
+  if (!(await directoryHasPackageJson(workspaceFolderPath))) {
+    workspaceFolderPath = (await findNearestConfigDir(workspaceFolderPath)) || workspaceFolderPath;
+  }
+  return workspaceFolderPath;
 };
 
 export async function findTestFile(
   filePath: string,
-  searchStrategy: FileSearchStrategy = "one-up"
+  searchStrategy: FileSearchStrategy = "one-up",
 ): Promise<vscode.Uri | null> {
   const fileName: string = filePath.split("/").pop()!;
   const fileNameExtension: string = fileName.split(".").pop()!;
   const fileNameRaw = fileName.replace(`.${fileNameExtension}`, "");
 
   const currentDir: vscode.Uri = vscode.Uri.parse(filePath.replace(fileName, ""));
-  const rootDir = getRootDir();
+  const rootDir = await getRootDir();
   if (!rootDir) {
     return null;
   }

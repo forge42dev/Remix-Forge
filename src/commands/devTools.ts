@@ -29,7 +29,7 @@ export const startDevTools = async (statusBarItem: vscode.StatusBarItem) => {
   wss = new WebSocketServer({ port: port || 3003 });
   setStatusBarToRunning(statusBarItem);
 
-  const rootDir = getRootDir();
+  const rootDir = await getRootDir();
   if (!rootDir) {
     return undefined;
   }

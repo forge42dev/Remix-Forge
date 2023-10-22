@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { getPackageJson, getWorkspacePath } from "../../utils/vscode";
+import { getPackageJson } from "../../utils/vscode";
 
 export const generateEslintConfig = () => {
   return [
@@ -16,7 +16,7 @@ export const generateEslintConfig = () => {
 export const extendPackageJsonWithLinting = async () => {
   const pkg = await getPackageJson();
   const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri;
-  if (!workspaceRoot) return;
+  if (!workspaceRoot) {return;}
 
   if (!pkg.scripts.lint) {
     pkg.scripts.lint = `eslint \"app/**/*.+(ts|tsx)\"`;

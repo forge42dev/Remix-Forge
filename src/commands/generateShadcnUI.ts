@@ -1,14 +1,13 @@
 import * as vscode from "vscode";
 import {
   getMultiplePickableOptions,
-  getUserInput,
   joinPath,
   runCommandWithPrompt,
   sanitizePath,
   tryReadDirectory,
   writeToFile,
 } from "../utils/vscode";
-import { getRootDir, getRootDirPath, tryReadFile } from "../utils/file";
+import { getRootDir, tryReadFile } from "../utils/file";
 import { getConfig, updateConfig } from "../config";
 
 const availableComponentList = [
@@ -69,14 +68,14 @@ const getAvailableComponents = async (rootDirPath: vscode.Uri, outputLocation: s
 };
 
 export const generateShadcnUI = async () => {
-  const rootDir = getRootDir();
+  const rootDir = await getRootDir();
   if (!rootDir) {
     return;
   }
   const initialized = await tryReadFile(joinPath(rootDir, "components.json"));
   if (!initialized) {
     vscode.window.showErrorMessage(
-      "Shadcn UI is not initialized in this project. (components.json declaration missing)"
+      "Shadcn UI is not initialized in this project. (components.json declaration missing)",
     );
     return;
   }

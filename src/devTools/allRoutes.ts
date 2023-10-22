@@ -8,7 +8,7 @@ interface Route {
 }
 
 export const getAllRemixRoutes = async () => {
-  const rootDir = getRootDir();
+  const rootDir = await getRootDir();
   if (!rootDir) {
     return undefined;
   }
