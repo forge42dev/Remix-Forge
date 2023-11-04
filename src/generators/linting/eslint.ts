@@ -13,10 +13,8 @@ export const generateEslintConfig = () => {
   ].join("\n");
 };
 
-export const extendPackageJsonWithLinting = async () => {
-  const pkg = await getPackageJson();
-  const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri;
-  if (!workspaceRoot) {return;}
+export const extendPackageJsonWithLinting = async (rootDir: vscode.Uri) => {
+  const pkg = await getPackageJson(rootDir);
 
   if (!pkg.scripts.lint) {
     pkg.scripts.lint = `eslint \"app/**/*.+(ts|tsx)\"`;
@@ -35,7 +33,7 @@ export const extendPackageJsonWithLinting = async () => {
   }
 
   await vscode.workspace.fs.writeFile(
-    vscode.Uri.joinPath(workspaceRoot, "package.json"),
-    Buffer.from(JSON.stringify(pkg, null, 2))
+    vscode.Uri.joinPath(rootDir, "package.json"),
+    Buffer.from(JSON.stringify(pkg, null, 2)),
   );
 };

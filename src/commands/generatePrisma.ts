@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import { askInstallDependenciesPrompt, getPackageJson, runCommand } from "../utils/vscode";
 import { generatePrismaDBFile } from "../generators/prisma/db.server";
 import { generateSeedFile } from "../generators/prisma/seed";
+import { getRemixRootFromFileUri } from "../utils/file";
 
 interface DB_SOURCE_OPTION extends vscode.QuickPickItem {
   key: string;
@@ -27,28 +28,29 @@ export const DB_SOURCE_OPTIONS: DB_SOURCE_OPTION[] = [
 ];
 
 export const generatePrisma = async (uri: vscode.Uri) => {
-  const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri;
-  if (!workspaceRoot) return;
+  const rootDir = await getRemixRootFromFileUri(uri);
+  if (!rootDir) return;
 
-  const prismaFolder = vscode.Uri.joinPath(workspaceRoot, "prisma");
+  const prismaFolder = vscode.Uri.joinPath(rootDir, "prisma");
   const option = await vscode.window.showQuickPick(DB_SOURCE_OPTIONS);
 
   if (!option) return;
 
   await runCommand({
+    rootDir: rootDir,
     title: "Initializing Prisma",
     command: `npx prisma init --datasource-provider ${option.key}`,
     errorMessage: "Error initializing Prisma",
     callback: async () => {
       await vscode.workspace.fs.writeFile(
         vscode.Uri.joinPath(uri, "db.server.ts"),
-        Buffer.from(generatePrismaDBFile())
+        Buffer.from(generatePrismaDBFile()),
       );
       await vscode.workspace.fs.writeFile(
         vscode.Uri.joinPath(prismaFolder, "seed.ts"),
-        Buffer.from(generateSeedFile())
+        Buffer.from(generateSeedFile()),
       );
-      const pkg = await getPackageJson();
+      const pkg = await getPackageJson(rootDir);
       pkg.scripts["db:gen"] = "prisma generate";
       pkg.scripts["db:migrate"] = "prisma migrate dev";
       pkg.scripts["db:seed"] = "prisma db seed";
@@ -57,12 +59,13 @@ export const generatePrisma = async (uri: vscode.Uri) => {
         seed: "ts-node --require tsconfig-paths/register prisma/seed.ts",
       };
       await vscode.workspace.fs.writeFile(
-        vscode.Uri.joinPath(workspaceRoot, "package.json"),
-        Buffer.from(JSON.stringify(pkg, null, 2))
+        vscode.Uri.joinPath(rootDir, "package.json"),
+        Buffer.from(JSON.stringify(pkg, null, 2)),
       );
       return askInstallDependenciesPrompt(
+        rootDir,
         ["@prisma/client"],
-        ["prisma", "ts-node", "tsconfig-paths", "typescript", "@types/node"]
+        ["prisma", "ts-node", "tsconfig-paths", "typescript", "@types/node"],
       );
     },
   });

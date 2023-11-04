@@ -2,8 +2,13 @@ import * as vscode from "vscode";
 import { getConfig } from "../config";
 import { generateConformForm, generateRemixHookForm } from "../forms";
 import { askInstallDependenciesPrompt } from "../utils/vscode";
+import { getRemixRootFromFileUri } from "../utils/file";
 
 export const generateRemixFormRoute = async (uri: vscode.Uri) => {
+  const rootDir = await getRemixRootFromFileUri(uri);
+  if (!rootDir) {
+    return;
+  }
   const config = getConfig();
   const template = config.get<string>("formRouteTemplate");
 
@@ -25,11 +30,12 @@ export const generateRemixFormRoute = async (uri: vscode.Uri) => {
 
   await vscode.workspace.fs.writeFile(
     filePath,
-    Buffer.from(formHandler === "remix-hook-form" ? generateRemixHookForm() : generateConformForm())
+    Buffer.from(formHandler === "remix-hook-form" ? generateRemixHookForm() : generateConformForm()),
   );
   await askInstallDependenciesPrompt(
+    rootDir,
     formHandler === "remix-hook-form"
       ? ["react-hook-form", "remix-hook-form", "@remix-run/react", "@hookform/resolvers", "zod"]
-      : ["@conform-to/react", "@conform-to/zod", "@remix-run/react", "zod"]
+      : ["@conform-to/react", "@conform-to/zod", "@remix-run/react", "zod"],
   );
 };

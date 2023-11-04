@@ -1,4 +1,4 @@
-import { generatePath, getRootDir } from "../utils/file";
+import { generatePath, getRemixRootFromFileUri } from "../utils/file";
 import { joinPath, tryReadDirectory } from "../utils/vscode";
 import * as vscode from "vscode";
 
@@ -7,8 +7,8 @@ interface Route {
   url: string;
 }
 
-export const getAllRemixRoutes = async () => {
-  const rootDir = await getRootDir();
+export const getAllRemixRoutes = async (uri: vscode.Uri) => {
+  const rootDir = await getRemixRootFromFileUri(uri);
   if (!rootDir) {
     return undefined;
   }

@@ -2,8 +2,15 @@ import { Server } from "ws";
 import type { MessageEvent, WebSocket } from "ws";
 import { getProjectCommands } from "../devTools/getProjectCommands";
 import { runTerminalCommands } from "../devTools/runTerminalCommands";
-import { getRootDir, isTSConfigExists, openFileInEditor, tryReadFile, tryReadFilePath } from "../utils/file";
-import { joinPath } from "../utils/vscode";
+import {
+  getRemixRootFromFileUri,
+  isRemixDir,
+  isTSConfigExists,
+  openFileInEditor,
+  tryReadFile,
+  tryReadFilePath,
+} from "../utils/file";
+import { getWorkspaceUri, joinPath } from "../utils/vscode";
 import * as vscode from "vscode";
 import { setStatusBarToRunning, setStatusBarToStopped } from "../utils/statusBar";
 import { generateRouteFile } from "./generateRouteFile";
@@ -29,9 +36,23 @@ export const startDevTools = async (statusBarItem: vscode.StatusBarItem) => {
   wss = new WebSocketServer({ port: port || 3003 });
   setStatusBarToRunning(statusBarItem);
 
-  const rootDir = await getRootDir();
-  if (!rootDir) {
-    return undefined;
+  const workspaceUri = getWorkspaceUri();
+  if (!workspaceUri) {
+    return;
+  }
+  let rootDir = workspaceUri;
+
+  if (!(await isRemixDir(rootDir))) {
+    const currentFile = vscode.window.activeTextEditor?.document.uri;
+
+    if (!currentFile) {
+      return;
+    }
+    const remixDir = await getRemixRootFromFileUri(currentFile);
+    if (!remixDir) {
+      return;
+    }
+    rootDir = remixDir;
   }
 
   const isTS = await isTSConfigExists(rootDir);
@@ -56,7 +77,7 @@ export const startDevTools = async (statusBarItem: vscode.StatusBarItem) => {
             socket.send(JSON.stringify({ type: "plugin", subtype: "open_file", error: false, data: "success" }));
           } catch (err) {
             socket.send(
-              JSON.stringify({ type: "plugin", subtype: "open_file", error: true, data: (err as any)?.message })
+              JSON.stringify({ type: "plugin", subtype: "open_file", error: true, data: (err as any)?.message }),
             );
           }
         }
@@ -68,7 +89,7 @@ export const startDevTools = async (statusBarItem: vscode.StatusBarItem) => {
             }
           } catch (err) {
             socket.send(
-              JSON.stringify({ type: "plugin", subtype: "write_file", error: true, data: (err as any)?.message })
+              JSON.stringify({ type: "plugin", subtype: "write_file", error: true, data: (err as any)?.message }),
             );
           }
         }
@@ -82,13 +103,13 @@ export const startDevTools = async (statusBarItem: vscode.StatusBarItem) => {
             socket.send(JSON.stringify({ type: "plugin", subtype: "delete_file", error: false, data: "success" }));
           } catch (err) {
             socket.send(
-              JSON.stringify({ type: "plugin", subtype: "delete_file", error: true, data: (err as any)?.message })
+              JSON.stringify({ type: "plugin", subtype: "delete_file", error: true, data: (err as any)?.message }),
             );
           }
         }
       }
       if (message.type === "terminal_command") {
-        runTerminalCommands(socket, message.command, message.terminalId, wss!);
+        runTerminalCommands(rootDir, socket, message.command, message.terminalId, wss!);
       }
       if (message.type === "add_route") {
         const path = message.path;
@@ -133,11 +154,11 @@ export const startDevTools = async (statusBarItem: vscode.StatusBarItem) => {
       }
 
       if (message.type === "commands") {
-        const commands = await getProjectCommands();
+        const commands = await getProjectCommands(rootDir);
         socket.send(JSON.stringify({ type: "commands", data: commands }));
       }
       /*  if (message.type === "get_file") {
-        const routes = await getAllRemixRoutes();
+        const routes = await getAllRemixRoutes(rootDir);
         const path = routes?.find((r) => r.url === message.data)?.path;
         if (!path) {
           socket.send(JSON.stringify({ type: "file", data: "not found" }));

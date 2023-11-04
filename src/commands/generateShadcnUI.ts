@@ -7,7 +7,7 @@ import {
   tryReadDirectory,
   writeToFile,
 } from "../utils/vscode";
-import { getRootDir, tryReadFile } from "../utils/file";
+import { getRemixRootFromFileUri, tryReadFile } from "../utils/file";
 import { getConfig, updateConfig } from "../config";
 
 const availableComponentList = [
@@ -67,8 +67,8 @@ const getAvailableComponents = async (rootDirPath: vscode.Uri, outputLocation: s
   return filteredComponents;
 };
 
-export const generateShadcnUI = async () => {
-  const rootDir = await getRootDir();
+export const generateShadcnUI = async (uri: vscode.Uri) => {
+  const rootDir = await getRemixRootFromFileUri(uri);
   if (!rootDir) {
     return;
   }
@@ -106,6 +106,7 @@ export const generateShadcnUI = async () => {
   const componentsToGenerate = pickedComponents.map((component) => component.key).join(" ");
 
   await runCommandWithPrompt({
+    rootDir,
     command: `npx shadcn-ui@latest add ${componentsToGenerate}`,
     title: "Generating shadcn/ui components",
     promptHandler: async (process, resolve) => {

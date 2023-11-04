@@ -1,10 +1,11 @@
 import { exec } from "child_process";
 import { WebSocket, WebSocketServer } from "ws";
 import { killtree } from "./killProcess";
-import { getRootDir } from "../utils/file";
+import { getRemixRootFromFileUri } from "../utils/file";
+import * as vscode from  'vscode';
 /** Make this work properly with the remix dev tools so it executes, closes and runs processes */
-const executeCommand = async (command: string, socket: WebSocket, terminalId: number, wss: WebSocketServer) => {
-  const workspacePath = await getRootDir();
+const executeCommand = async (uri: vscode.Uri, command: string, socket: WebSocket, terminalId: number, wss: WebSocketServer) => {
+  const workspacePath = await getRemixRootFromFileUri(uri);
   const process = exec(command, { cwd: workspacePath?.fsPath, env: { FORCE_COLOR: "true" } });
 
   process.on("spawn", () => {
@@ -54,10 +55,11 @@ const executeCommand = async (command: string, socket: WebSocket, terminalId: nu
   });
 };
 export const runTerminalCommands = async (
+  uri: vscode.Uri,
   socket: WebSocket,
   command: string,
   terminalId: number,
   wss: WebSocketServer,
 ) => {
-  await executeCommand(command, socket, terminalId, wss);
+  await executeCommand(uri, command, socket, terminalId, wss);
 };

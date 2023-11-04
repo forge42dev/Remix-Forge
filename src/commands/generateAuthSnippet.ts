@@ -25,7 +25,11 @@ export const generateAuthSnippet = async (uri: vscode.Uri, type: "action" | "loa
       if (!line.includes("async")) {
         lineOutput = lineOutput.replace("=", `= async`);
       }
-      if (!line.includes("LoaderFunctionArgs") && !line.includes("ActionFunctionArgs") && !line.includes("DataFunctionArgs")) {
+      if (
+        !line.includes("LoaderFunctionArgs") &&
+        !line.includes("ActionFunctionArgs") &&
+        !line.includes("DataFunctionArgs")
+      ) {
         shouldAddTypeImport = true;
       }
 
@@ -40,7 +44,7 @@ export const generateAuthSnippet = async (uri: vscode.Uri, type: "action" | "loa
 
         lineOutput = lineOutput.replace(
           "=> {",
-          '=> {\n  await authenticator.isAuthenticated(request, { failureRedirect: "/login" });\n'
+          '=> {\n  await authenticator.isAuthenticated(request, { failureRedirect: "/login" });\n',
         );
 
         lineOutput = lineOutput + "\n}";
@@ -48,7 +52,7 @@ export const generateAuthSnippet = async (uri: vscode.Uri, type: "action" | "loa
       if (line.includes("=> {")) {
         lineOutput = lineOutput.replace(
           "=> {",
-          '=> {\n  await authenticator.isAuthenticated(request, { failureRedirect: "/login" });\n'
+          '=> {\n  await authenticator.isAuthenticated(request, { failureRedirect: "/login" });\n',
         );
       }
     }

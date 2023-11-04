@@ -8,7 +8,7 @@ import {
   sanitizePath,
   writeToFile,
 } from "../utils/vscode";
-import { getDirFromFileUri, tryReadFile } from "../utils/file";
+import { getRemixRootFromFileUri, tryReadFile } from "../utils/file";
 import { getConfig } from "../config";
 
 const moveUtils = async (rootDir: vscode.Uri, libLocation: string) => {
@@ -133,7 +133,10 @@ const updateTsconfig = async (rootDir: vscode.Uri, libLocation: string) => {
 };
 
 export const initShadcnUi = async (uri: vscode.Uri) => {
-  const rootDir = getDirFromFileUri(uri);
+  const rootDir = await getRemixRootFromFileUri(uri);
+  if (!rootDir) {
+    return;
+  }
   const initialized = await tryReadFile(joinPath(rootDir, "components.json"));
   if (initialized) {
     vscode.window.showErrorMessage("Shadcn UI is already initialized in this project.");
@@ -155,6 +158,7 @@ export const initShadcnUi = async (uri: vscode.Uri) => {
     return;
   }
   await runCommandWithPrompt({
+    rootDir,
     command: "npx shadcn-ui@latest init",
     title: "Initializing shadcn/ui",
     promptHandler: async (process, resolve) => {
@@ -218,7 +222,7 @@ export const initShadcnUi = async (uri: vscode.Uri) => {
   await updateTsconfig(rootDir, libLocation);
   await updateRemixConfig(rootDir);
 
-  await installDependencies([
+  await installDependencies(rootDir, [
     "class-variance-authority",
     "clsx",
     " tailwind-merge",
