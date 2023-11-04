@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
-import { sanitizePath } from "./vscode";
+import { getWorkspaceUri, sanitizePath } from "./vscode";
+import * as path from "path";
 
 export const getFileExtension = (fileName: string) => {
   return fileName.split(".").pop()!;
@@ -52,40 +53,36 @@ async function directoryHasPackageJson(dir: vscode.Uri) {
     return false;
   }
 }
-export async function findNearestConfigDir(dir: vscode.Uri): Promise<vscode.Uri | undefined> {
-  const hasRemixConfig = await fileExists(dir, "remix.config.js");
-  if ((await directoryHasPackageJson(dir)) && hasRemixConfig) {
-    return dir;
-  }
-
-  const files = await vscode.workspace.fs.readDirectory(dir);
-  for (const file of files) {
-    const fileType = file[1];
-    if (fileType === vscode.FileType.Directory) {
-      const foundDir = await findNearestConfigDir(vscode.Uri.joinPath(dir, file[0]));
-      if (foundDir) {
-        return foundDir;
-      }
-    }
-  }
+function getParentDirFromFileUri(uri: vscode.Uri) {
+  const parentPath = path.dirname(uri.fsPath);
+  const parentUri = vscode.Uri.file(parentPath);
+  return parentUri;
 }
 
-export const getDirFromFileUri = (uri: vscode.Uri) => {
-  const path = uri.fsPath;
-  return vscode.Uri.file(path.substring(0, path.lastIndexOf("/")));
+export const isRemixDir = async (uri: vscode.Uri) => {
+  const hasRemixConfig = await fileExists(uri, "remix.config.js");
+  const hasPackageJson = await directoryHasPackageJson(uri);
+  return hasPackageJson && hasRemixConfig;
 };
 
-export const getRootDir = async () => {
-  const workspaceFolders = vscode.workspace.workspaceFolders;
-  if (!workspaceFolders || workspaceFolders.length === 0) {
-    return undefined; // No workspace folders found
-  }
+function isChildOrNestedChildUri(parentUri: vscode.Uri, childUri: vscode.Uri) {
+  const parentPath = path.resolve(parentUri.fsPath);
+  const childPath = path.resolve(childUri.fsPath);
+  return childPath.startsWith(parentPath);
+}
 
-  let workspaceFolderPath = workspaceFolders[0].uri;
-  if (!(await directoryHasPackageJson(workspaceFolderPath))) {
-    workspaceFolderPath = (await findNearestConfigDir(workspaceFolderPath)) || workspaceFolderPath;
+export const getRemixRootFromFileUri = async (uri: vscode.Uri) => {
+  let root = uri;
+  if (await isRemixDir(root)) {
+    return uri;
   }
-  return workspaceFolderPath;
+  const parent = getParentDirFromFileUri(root);
+  const workspaceUri = getWorkspaceUri();
+  if (!workspaceUri || (workspaceUri && isChildOrNestedChildUri(root, workspaceUri))) {
+    return;
+  }
+  root = (await getRemixRootFromFileUri(parent)) || root;
+  return root;
 };
 
 export async function findTestFile(
@@ -97,7 +94,7 @@ export async function findTestFile(
   const fileNameRaw = fileName.replace(`.${fileNameExtension}`, "");
 
   const currentDir: vscode.Uri = vscode.Uri.parse(filePath.replace(fileName, ""));
-  const rootDir = await getRootDir();
+  const rootDir = await getRemixRootFromFileUri(currentDir);
   if (!rootDir) {
     return null;
   }
