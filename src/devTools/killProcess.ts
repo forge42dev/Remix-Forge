@@ -4,19 +4,19 @@ const pidtree = require("pidtree");
 let isWindows = process.platform === "win32";
 
 export const kill = async (pid: number) => {
-  if (!isAlive(pid)) return;
+  if (!isAlive(pid)) {return;}
   if (isWindows) {
     await execa("taskkill", ["/F", "/PID", pid.toString()]).catch((error: any) => {
       // taskkill 128 -> the process is already dead
-      if (error.exitCode === 128) return;
-      if (/There is no running instance of the task./.test(error.message)) return;
+      if (error.exitCode === 128) {return;}
+      if (/There is no running instance of the task./.test(error.message)) {return;}
       console.warn(error.message);
     });
     return;
   }
   await execa("kill", ["-9", pid.toString()]).catch((error: any) => {
     // process is already dead
-    if (/No such process/.test(error.message)) return;
+    if (/No such process/.test(error.message)) {return;}
     console.warn(error.message);
   });
 };

@@ -18,11 +18,11 @@ const createBarrel = async (path: string, config: vscode.WorkspaceConfiguration)
   const barrelizeIndexExtension = config.get<string>("barrelizeIndexExtension") || "ts";
 
   for (const [file, fileType] of files) {
-    if (ignoreFiles.some((fileName) => file.includes(fileName))) continue;
+    if (ignoreFiles.some((fileName) => file.includes(fileName))) {continue;}
     const filePath = vscode.Uri.joinPath(vscode.Uri.file(path), file);
     const shouldRemoveExtension = removeExtensions.some((ext) => file.includes(ext));
     const finalFileName = shouldRemoveExtension ? file.split(".").slice(0, -1).join(".") : file;
-    if (!finalFileName) continue;
+    if (!finalFileName) {continue;}
     exports.push(`export * from "./${finalFileName}";`);
     // Generate the barrel for the subdirectory
     if (fileType === vscode.FileType.Directory) {

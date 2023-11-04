@@ -29,12 +29,12 @@ export const DB_SOURCE_OPTIONS: DB_SOURCE_OPTION[] = [
 
 export const generatePrisma = async (uri: vscode.Uri) => {
   const rootDir = await getRemixRootFromFileUri(uri);
-  if (!rootDir) return;
+  if (!rootDir) {return;}
 
   const prismaFolder = vscode.Uri.joinPath(rootDir, "prisma");
   const option = await vscode.window.showQuickPick(DB_SOURCE_OPTIONS);
 
-  if (!option) return;
+  if (!option) {return;}
 
   await runCommand({
     rootDir: rootDir,

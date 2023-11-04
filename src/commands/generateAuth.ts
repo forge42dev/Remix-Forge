@@ -24,7 +24,7 @@ export const generateAuth = async (uri: vscode.Uri) => {
     title: "Select the strategies you want in your authentication workflow",
   });
 
-  if (!options) return;
+  if (!options) {return;}
 
   const servicesFolder = vscode.Uri.joinPath(uri, "services");
   const config = getConfig();

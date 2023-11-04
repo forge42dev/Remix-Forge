@@ -3,8 +3,8 @@ import { AUTH_STRATEGY_OPTION } from "../config/options";
 export const generateEnvVars = (options: AUTH_STRATEGY_OPTION[], existingEnv: string) => {
   const envVars = options
     .map((option) => {
-      if (option.key === "form") return "";
-      if (existingEnv.includes(option.key.toUpperCase())) return "";
+      if (option.key === "form") {return "";}
+      if (existingEnv.includes(option.key.toUpperCase())) {return "";}
       const keys = [
         `# ${option.key} Env Variables`,
         `${option.key.toUpperCase()}_CLIENT_ID=""`,
@@ -30,6 +30,6 @@ export const generateEnvVars = (options: AUTH_STRATEGY_OPTION[], existingEnv: st
     finalOutput.push('SESSION_SECRET="s3cr3t"');
   }
   finalOutput.push(envVars);
-  if (finalOutput.length <= 2) return "";
+  if (finalOutput.length <= 2) {return "";}
   return finalOutput.join("\n");
 };
