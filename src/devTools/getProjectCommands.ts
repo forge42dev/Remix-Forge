@@ -1,7 +1,8 @@
 import { getPackageJson } from "../utils/vscode";
+import * as vscode from "vscode";
 
-export const getProjectCommands = async () => {
-  const pkg = await getPackageJson();
+export const getProjectCommands = async (uri: vscode.Uri) => {
+  const pkg = await getPackageJson(uri);
   if (!pkg) {
     return undefined;
   }

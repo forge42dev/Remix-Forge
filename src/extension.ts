@@ -20,10 +20,11 @@ import { ActionLens } from "./code-lenses/ActionLens";
 import { checkRemixVersion } from "./startup/checkRemixVersion";
 import { generateRemixPartial } from "./commands/editorContext";
 import { startDevTools } from "./commands/devTools";
-import { generateCommand } from "./utils/vscode";
+import { generateCommand, getWorkspaceUri } from "./utils/vscode";
 import { createStatusBar } from "./utils/statusBar";
+import { isRemixDir } from "./utils/file";
 
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
   const flattenRoutesCommand = vscode.commands.registerCommand(generateCommand("flattenRoutes"), flattenRoutes);
   const generateAuthCommand = vscode.commands.registerCommand(generateCommand("generateAuth"), generateAuth);
   const openUrlCommand = vscode.commands.registerCommand(generateCommand("openUrl"), openUrl);
@@ -32,44 +33,44 @@ export function activate(context: vscode.ExtensionContext) {
   const generatePrismaCommand = vscode.commands.registerCommand(generateCommand("generatePrisma"), generatePrisma);
   const generateTestsCommand = vscode.commands.registerCommand(generateCommand("generateTests"), generateTests);
   const generateLoaderCommand = vscode.commands.registerCommand(generateCommand("generateLoader"), () =>
-    generateRemixPartial("loader")
+    generateRemixPartial("loader"),
   );
   const generateActionCommand = vscode.commands.registerCommand(generateCommand("generateAction"), () =>
-    generateRemixPartial("action")
+    generateRemixPartial("action"),
   );
   const generateErrorBoundaryCommand = vscode.commands.registerCommand(generateCommand("generateErrorBoundary"), () =>
-    generateRemixPartial("errorBoundary")
+    generateRemixPartial("errorBoundary"),
   );
   const generateMetaCommand = vscode.commands.registerCommand(generateCommand("generateMeta"), () =>
-    generateRemixPartial("meta")
+    generateRemixPartial("meta"),
   );
   const generateHeadersCommand = vscode.commands.registerCommand(generateCommand("generateHeaders"), () =>
-    generateRemixPartial("headers")
+    generateRemixPartial("headers"),
   );
   const generateLinksCommand = vscode.commands.registerCommand(generateCommand("generateLinks"), () =>
-    generateRemixPartial("links")
+    generateRemixPartial("links"),
   );
   const generateRevalidateCommand = vscode.commands.registerCommand(generateCommand("generateRevalidate"), () =>
-    generateRemixPartial("revalidate")
+    generateRemixPartial("revalidate"),
   );
   const lintingCommand = vscode.commands.registerCommand(generateCommand("linting"), linting);
   const initShadcnUiCommand = vscode.commands.registerCommand(generateCommand("initShadcnUi"), initShadcnUi);
   const generateShadcnUICommand = vscode.commands.registerCommand(
     generateCommand("generateShadcnUI"),
-    generateShadcnUI
+    generateShadcnUI,
   );
 
   const generateRouteFileCommand = vscode.commands.registerCommand(
     generateCommand("generateRemixRoute"),
-    generateRouteFile
+    generateRouteFile,
   );
   const generateRemixFormRouteCommand = vscode.commands.registerCommand(
     generateCommand("generateRemixFormRoute"),
-    generateRemixFormRoute
+    generateRemixFormRoute,
   );
   const generateAuthSnippetCommand = vscode.commands.registerCommand(
     generateCommand("generateAuthSnippet"),
-    generateAuthSnippet
+    generateAuthSnippet,
   );
   const codeLensProvider = new ComponentLens();
   const loaderLens = new LoaderLens();
@@ -77,7 +78,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   const statusBarAddition = createStatusBar();
   const devToolsCommand = vscode.commands.registerCommand(generateCommand("devTools"), () =>
-    startDevTools(statusBarAddition)
+    startDevTools(statusBarAddition),
   );
   // Add the status bar item to the extensions' context
   context.subscriptions.push(statusBarAddition);
@@ -88,7 +89,7 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.languages.registerCodeLensProvider({ scheme: "file", language: "typescriptreact" }, codeLensProvider),
     vscode.languages.registerCodeLensProvider({ scheme: "file", language: "typescriptreact" }, loaderLens),
-    vscode.languages.registerCodeLensProvider({ scheme: "file", language: "typescriptreact" }, actionLens)
+    vscode.languages.registerCodeLensProvider({ scheme: "file", language: "typescriptreact" }, actionLens),
   );
 
   // Register the commands
@@ -113,10 +114,17 @@ export function activate(context: vscode.ExtensionContext) {
     generateHeadersCommand,
     generateLinksCommand,
     generateRevalidateCommand,
-    devToolsCommand
+    devToolsCommand,
   );
   // Do all the startup checks after this line
-  checkRemixVersion();
+  const workspaceUri = getWorkspaceUri();
+  if (!workspaceUri) {
+    return;
+  }
+  if (!(await isRemixDir(workspaceUri))) {
+    return;
+  }
+  checkRemixVersion(workspaceUri);
 }
 
 export function deactivate() {}

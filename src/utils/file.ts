@@ -1,14 +1,6 @@
 import * as vscode from "vscode";
-import * as ts from "typescript";
-import { sanitizePath } from "./vscode";
-export const getRootDirPath = () => {
-  const path = vscode.workspace.workspaceFolders?.[0].uri.path;
-  if (!path) {
-    return;
-  }
-  const rootDir: vscode.Uri = vscode.Uri.file(path);
-  return rootDir;
-};
+import { getWorkspaceUri, sanitizePath } from "./vscode";
+import * as path from "path";
 
 export const getFileExtension = (fileName: string) => {
   return fileName.split(".").pop()!;
@@ -45,23 +37,64 @@ export const formatFile = async (filePath: string) => {
 
 export type FileSearchStrategy = "all" | "one-up" | "sub";
 
-export const getRootDir = () => {
+export const fileExists = async (dir: vscode.Uri, filename: string): Promise<boolean> => {
   try {
-    const rootDir: vscode.Uri = vscode.Uri.file(vscode.workspace.workspaceFolders![0].uri.path!);
-    return rootDir;
-  } catch (e) {}
+    await vscode.workspace.fs.stat(vscode.Uri.joinPath(dir, filename));
+    return true;
+  } catch (_e) {
+    return false;
+  }
+};
+
+async function directoryHasPackageJson(dir: vscode.Uri) {
+  try {
+    return await fileExists(dir, "package.json");
+  } catch (e) {
+    return false;
+  }
+}
+function getParentDirFromFileUri(uri: vscode.Uri) {
+  const parentPath = path.dirname(uri.fsPath);
+  const parentUri = vscode.Uri.file(parentPath);
+  return parentUri;
+}
+
+export const isRemixDir = async (uri: vscode.Uri) => {
+  const hasRemixConfig = await fileExists(uri, "remix.config.js");
+  const hasPackageJson = await directoryHasPackageJson(uri);
+  return hasPackageJson && hasRemixConfig;
+};
+
+function isChildOrNestedChildUri(parentUri: vscode.Uri, childUri: vscode.Uri) {
+  const parentPath = path.resolve(parentUri.fsPath);
+  const childPath = path.resolve(childUri.fsPath);
+  return childPath.startsWith(parentPath);
+}
+
+export const getRemixRootFromFileUri = async (uri: vscode.Uri) => {
+  let root = uri;
+  if (await isRemixDir(root)) {
+    return uri;
+  }
+  const parent = getParentDirFromFileUri(root);
+  const workspaceUri = getWorkspaceUri();
+  if (!workspaceUri || (workspaceUri && isChildOrNestedChildUri(root, workspaceUri))) {
+    return;
+  }
+  root = (await getRemixRootFromFileUri(parent)) || root;
+  return root;
 };
 
 export async function findTestFile(
   filePath: string,
-  searchStrategy: FileSearchStrategy = "one-up"
+  searchStrategy: FileSearchStrategy = "one-up",
 ): Promise<vscode.Uri | null> {
   const fileName: string = filePath.split("/").pop()!;
   const fileNameExtension: string = fileName.split(".").pop()!;
   const fileNameRaw = fileName.replace(`.${fileNameExtension}`, "");
 
   const currentDir: vscode.Uri = vscode.Uri.parse(filePath.replace(fileName, ""));
-  const rootDir = getRootDir();
+  const rootDir = await getRemixRootFromFileUri(currentDir);
   if (!rootDir) {
     return null;
   }

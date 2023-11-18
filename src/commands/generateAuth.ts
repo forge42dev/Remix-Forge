@@ -12,14 +12,19 @@ import { generateEnvVars } from "../auth/authFiles/env";
 import { dashboardFileContent } from "../auth/authFiles/dashboard";
 import { getConfig } from "../config";
 import { askInstallDependenciesPrompt, joinPath, writeToFile } from "../utils/vscode";
+import { getRemixRootFromFileUri } from "../utils/file";
 
 export const generateAuth = async (uri: vscode.Uri) => {
+  const rootDir = await getRemixRootFromFileUri(uri);
+  if (!rootDir) {
+    return;
+  }
   const options = await vscode.window.showQuickPick<AUTH_STRATEGY_OPTION>(AUTH_OPTIONS, {
     canPickMany: true,
     title: "Select the strategies you want in your authentication workflow",
   });
 
-  if (!options) return;
+  if (!options) {return;}
 
   const servicesFolder = vscode.Uri.joinPath(uri, "services");
   const config = getConfig();
@@ -29,9 +34,7 @@ export const generateAuth = async (uri: vscode.Uri) => {
   const strategyFolder = vscode.Uri.joinPath(servicesFolder, "auth_strategies");
   await vscode.workspace.fs.createDirectory(strategyFolder);
 
-  const projectRoot = vscode.workspace.getWorkspaceFolder(uri);
-  const projectRootUri = projectRoot?.uri;
-  const envFile = vscode.Uri.joinPath(projectRootUri!, ".env");
+  const envFile = vscode.Uri.joinPath(rootDir!, ".env");
   let envFileContent: string | Uint8Array = "";
   try {
     envFileContent = await vscode.workspace.fs.readFile(envFile);
@@ -45,7 +48,7 @@ export const generateAuth = async (uri: vscode.Uri) => {
   const dashboardFile = vscode.Uri.joinPath(routesFolder, "dashboard.tsx");
   await vscode.workspace.fs.writeFile(
     envFile,
-    Buffer.from([envFileContent, generateEnvVars(options, envFileContent.toString())].join("\n"))
+    Buffer.from([envFileContent, generateEnvVars(options, envFileContent.toString())].join("\n")),
   );
   await vscode.workspace.fs.writeFile(authRouteFile, Buffer.from(authRouteFileContent(config), "utf8"));
   await vscode.workspace.fs.writeFile(dashboardFile, Buffer.from(dashboardFileContent(config), "utf8"));
@@ -95,5 +98,5 @@ export const generateAuth = async (uri: vscode.Uri) => {
       strategyDeps.push("remix-auth-auth0");
     }
   }
-  await askInstallDependenciesPrompt(["remix-auth", ...strategyDeps]);
+  await askInstallDependenciesPrompt(rootDir, ["remix-auth", ...strategyDeps]);
 };

@@ -27,28 +27,24 @@ export const commandWithLoading = async (title: string, action: (...args: any[])
 
       // Update notification when process is finished
       progress.report({ increment: 100, message: "" });
-    }
+    },
   );
   vscode.window.showInformationMessage(`${title} finished!`).then(() => {});
   return;
 };
 
-export const getWorkspacePath = () => {
+export const getWorkspaceUri = () => {
   const workspaceFolders = vscode.workspace.workspaceFolders;
   if (!workspaceFolders || workspaceFolders.length === 0) {
     return undefined; // No workspace folders found
   }
 
-  const workspaceFolderPath = workspaceFolders[0].uri.fsPath;
+  const workspaceFolderPath = workspaceFolders[0].uri;
   return workspaceFolderPath;
 };
 
-export async function getPackageJson() {
-  const workspaceFolderPath = getWorkspacePath();
-  if (!workspaceFolderPath) {
-    return undefined;
-  }
-  const packageJsonPath = vscode.Uri.joinPath(vscode.Uri.file(workspaceFolderPath), "package.json").fsPath;
+export async function getPackageJson(rootDir: vscode.Uri) {
+  const packageJsonPath = vscode.Uri.joinPath(vscode.Uri.file(rootDir.fsPath), "package.json").fsPath;
   const packageJson = await vscode.workspace.fs.readFile(vscode.Uri.file(packageJsonPath));
   let output = undefined;
   try {
@@ -57,45 +53,41 @@ export async function getPackageJson() {
   return output;
 }
 
-export async function getDependencies() {
-  const pkg = await getPackageJson();
+export async function getDependencies(rootDir: vscode.Uri) {
+  const pkg = await getPackageJson(rootDir);
   if (!pkg) {
     return undefined;
   }
   return pkg.dependencies;
 }
 
-export async function getDependenciesArray() {
-  const deps = await getDependencies();
+export async function getDependenciesArray(rootDir: vscode.Uri) {
+  const deps = await getDependencies(rootDir);
   if (!deps) {
     return undefined;
   }
   return Object.keys(deps);
 }
-export async function getDevDependencies() {
-  const pkg = await getPackageJson();
+export async function getDevDependencies(rootDir: vscode.Uri) {
+  const pkg = await getPackageJson(rootDir);
   if (!pkg) {
     return undefined;
   }
   return pkg.devDependencies;
 }
 
-export async function getDevDependenciesArray() {
-  const deps = await getDevDependencies();
+export async function getDevDependenciesArray(rootDir: vscode.Uri) {
+  const deps = await getDevDependencies(rootDir);
   if (!deps) {
     return undefined;
   }
   return Object.keys(deps);
 }
 
-export const getPackageManager = async () => {
-  const workspaceFolderPath = getWorkspacePath();
-  if (!workspaceFolderPath) {
-    return undefined;
-  }
-  const packageJsonPathNPM = vscode.Uri.joinPath(vscode.Uri.file(workspaceFolderPath), "package-lock.json").fsPath;
-  const packageJsonPathYarn = vscode.Uri.joinPath(vscode.Uri.file(workspaceFolderPath), "yarn.lock").fsPath;
-  const packageJsonPathPNPM = vscode.Uri.joinPath(vscode.Uri.file(workspaceFolderPath), "pnpm-lock.yaml").fsPath;
+export const getPackageManager = async (rootDir: vscode.Uri) => {
+  const packageJsonPathNPM = vscode.Uri.joinPath(vscode.Uri.file(rootDir?.fsPath), "package-lock.json").fsPath;
+  const packageJsonPathYarn = vscode.Uri.joinPath(vscode.Uri.file(rootDir?.fsPath), "yarn.lock").fsPath;
+  const packageJsonPathPNPM = vscode.Uri.joinPath(vscode.Uri.file(rootDir?.fsPath), "pnpm-lock.yaml").fsPath;
   try {
     const packageLockNPM = await vscode.workspace.fs.readFile(vscode.Uri.file(packageJsonPathNPM));
     if (packageLockNPM) {
@@ -118,31 +110,34 @@ export const getPackageManager = async () => {
   return "npm";
 };
 
-export const installDependencies = async (depsToInstall: string[]) => {
-  const pkg = getPackageJson();
-  const packageManager = await getPackageManager();
+export const installDependencies = async (rootDir: vscode.Uri, depsToInstall: string[]) => {
+  const pkg = getPackageJson(rootDir);
+  const packageManager = await getPackageManager(rootDir);
   if (!pkg) {
     return;
   }
   return runCommand({
+    rootDir,
     title: "Installing dependencies",
     command: `${packageManager} ${packageManager !== "npm" ? "add" : "install"} ${depsToInstall.join(" ")}`,
   });
 };
 
-export const installDevDependencies = async (depsToInstall: string[]) => {
-  const pkg = getPackageJson();
-  const packageManager = await getPackageManager();
+export const installDevDependencies = async (rootDir: vscode.Uri, depsToInstall: string[]) => {
+  const pkg = getPackageJson(rootDir);
+  const packageManager = await getPackageManager(rootDir);
   if (!pkg) {
     return;
   }
   return runCommand({
+    rootDir,
     title: "Installing dependencies",
     command: `${packageManager} ${packageManager !== "npm" ? "add" : "install"} -D ${depsToInstall.join(" ")}`,
   });
 };
 
 interface RunCommandOptions {
+  rootDir: vscode.Uri;
   title: string;
   command: string;
   errorMessage?: string;
@@ -160,11 +155,11 @@ export const createOrGetTerminal = () => {
   return vscode.window.createTerminal();
 };
 
-export const runCommand = async ({ command, title, errorMessage, callback }: RunCommandOptions) => {
+export const runCommand = async ({ command, title, errorMessage, callback, rootDir }: RunCommandOptions) => {
   await commandWithLoading(title, () => {
     // Run npm install command
     return new Promise((resolve) => {
-      exec(`${command}`, { cwd: getWorkspacePath() }, async (error, stdout, stderr) => {
+      exec(`${command}`, { cwd: rootDir?.fsPath }, async (error, stdout, stderr) => {
         if (error) {
           vscode.window.showErrorMessage(`Error: ${errorMessage}`);
           return resolve();
@@ -186,22 +181,27 @@ export const runCommand = async ({ command, title, errorMessage, callback }: Run
 interface RunCommandWithPrompt {
   title: string;
   command: string;
+  rootDir: vscode.Uri;
   promptHandler: (process: ChildProcess, resolve: () => void) => Promise<void>;
 }
-export const runCommandWithPrompt = async ({ command, title, promptHandler }: RunCommandWithPrompt) => {
+export const runCommandWithPrompt = async ({ command, title, promptHandler, rootDir }: RunCommandWithPrompt) => {
   await commandWithLoading(title, () => {
     // Run npm install command
     return new Promise(async (resolve) => {
-      const process = exec(`${command}`, { cwd: getWorkspacePath() });
+      const process = exec(`${command}`, { cwd: rootDir?.fsPath });
 
       await promptHandler(process, resolve);
     });
   });
 };
 
-export const askInstallDependenciesPrompt = async (depsToInstall: string[], devDepsToInstall?: string[]) => {
-  const deps = await getDependenciesArray();
-  const devDeps = await getDevDependenciesArray();
+export const askInstallDependenciesPrompt = async (
+  rootDir: vscode.Uri,
+  depsToInstall: string[],
+  devDepsToInstall?: string[],
+) => {
+  const deps = await getDependenciesArray(rootDir);
+  const devDeps = await getDevDependenciesArray(rootDir);
   // No package.json found
   if (!deps) {
     return;
@@ -220,15 +220,15 @@ export const askInstallDependenciesPrompt = async (depsToInstall: string[], devD
     if (selectedOption === "Yes") {
       if (filteredDepsToInstall.length > 0) {
         // Install dependencies logic
-        await installDependencies(filteredDepsToInstall);
+        await installDependencies(rootDir, filteredDepsToInstall);
       }
       if (filteredDevDepsToInstall.length > 0) {
-        await installDevDependencies(filteredDevDepsToInstall);
+        await installDevDependencies(rootDir, filteredDevDepsToInstall);
       }
       // Execute the logic to install dependencies here
     } else if (selectedOption === "No") {
       // User chose not to install dependencies
-      vscode.window.showInformationMessage("Skipping dependency installation.");
+      // vscode.window.showInformationMessage("Skipping dependency installation.");
     }
   });
 };
@@ -244,12 +244,12 @@ export const getUserInput = async (prompt: string, value?: string) => {
 
 export const getPickableOptions = async <T extends vscode.QuickPickItem>(
   options: T[],
-  config?: vscode.QuickPickOptions
+  config?: vscode.QuickPickOptions,
 ) => await vscode.window.showQuickPick<T>(options, config);
 
 export const getMultiplePickableOptions = async <T extends vscode.QuickPickItem>(
   options: T[],
-  config?: vscode.QuickPickOptions
+  config?: vscode.QuickPickOptions,
 ) => await vscode.window.showQuickPick<T>(options, { ...config, canPickMany: true });
 
 export const sanitizePath = (path: string) => (path.startsWith("/") ? path : `/${path}`);

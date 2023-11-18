@@ -1,15 +1,20 @@
 import { exec } from "child_process";
-import { getPackageJson, getWorkspacePath } from "../utils/vscode";
+import { getPackageJson } from "../utils/vscode";
 import { updateRemix } from "../commands";
 import * as vscode from "vscode";
 import { getConfig } from "../config";
+import { getRemixRootFromFileUri } from "../utils/file";
 
-export const checkRemixVersion = async () => {
+export const checkRemixVersion = async (uri: vscode.Uri) => {
   const config = getConfig();
   if (config.get<boolean | undefined>("latestRemixNotification") === false) {
     return;
   }
-  const pkg = await getPackageJson();
+  const rootDir = await getRemixRootFromFileUri(uri);
+  if (!rootDir) {
+    return;
+  }
+  const pkg = await getPackageJson(rootDir);
   if (!pkg) {
     return;
   }
@@ -26,7 +31,7 @@ export const checkRemixVersion = async () => {
   }
 
   const promise = new Promise<string | undefined>(async (resolve) => {
-    exec(`npm view @remix-run/react version`, { cwd: getWorkspacePath() }, (error, stdout, stderr) => {
+    exec(`npm view @remix-run/react version`, { cwd: rootDir?.fsPath }, (error, stdout, stderr) => {
       if (error) {
         return resolve(undefined);
       }
@@ -48,14 +53,14 @@ export const checkRemixVersion = async () => {
     .showInformationMessage(
       `Your Remix version is ${remixVersion.replace(
         "^",
-        ""
+        "",
       )}, but the latest version is ${version}. Do you want to update?`,
       "Yes",
-      "No"
+      "No",
     )
     .then((value) => {
       if (value === "Yes") {
-        updateRemix();
+        updateRemix(rootDir);
       }
     });
 };
