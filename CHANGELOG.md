@@ -1,6 +1,13 @@
 # Change Log
 
 All notable changes to the "remix-forge" extension will be documented in this file. 
+
+## [0.5.0]
+
+Monorepo support. Run commands inside your monorepo. It won't add code to the root but rather the selected workspace.
+Bug fixes and improvements.
+Shadcn-ui initialization fix
+
 ## [0.4.6]
 V2 Support for loaders and actions
 ## [0.4.1]

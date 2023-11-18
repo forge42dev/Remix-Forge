@@ -3,6 +3,7 @@
 Remix Forge - A VS Code extension for Remix.run applications that super charges your development with a ever-growing set of functionalities.
 
 ## Whats new?
+- Added MonoRepo support
 - Added ability to inject code snippets into your active editor via right-click
 - Added ability to initialize a project for shadcn/ui components in Remix
 - Added ability to generate all supported components by the shadcn/ui CLI
@@ -12,6 +13,7 @@ Remix Forge - A VS Code extension for Remix.run applications that super charges 
 - Added ability to generate progressively enhanced form routes with a single click 
 - Added ability to generate the whole authentication scaffolding for Remix applications with a single click 
 - Added a notification on startup that lets you know there is a new version of Remix.run available
+
 ## Features
 
 ### Insert Remix code snippets in your current editor
@@ -205,6 +207,10 @@ This extension contributes the following configuration settings:
 - [ ] Add ability to generate a component name based on the route name
 
 ## Release Notes 
+
+## 0.5.0 
+
+Monorepo support
 
 ## 0.4.0
 - Added Remix Dev Tools connectivity to the extension

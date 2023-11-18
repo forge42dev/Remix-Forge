@@ -15,7 +15,7 @@ export const dashboardFileContent = (config: WorkspaceConfiguration) => {
     "};",
     "",
     "export default function DashboardRoute() {",
-    "  const { message } = useLoaderData();",
+    "  const { message } = useLoaderData<typeof loader>();",
     "  return (",
     "    <div>",
     "      <h1>{message}</h1>",
