@@ -46,6 +46,10 @@ export const checkRemixVersion = async (uri: vscode.Uri) => {
     });
   });
   const version = await promise;
+  if (!version) {
+    return;
+  }
+
   if (remixVersion.includes(version)) {
     return;
   }
@@ -53,10 +57,10 @@ export const checkRemixVersion = async (uri: vscode.Uri) => {
     .showInformationMessage(
       `Your Remix version is ${remixVersion.replace(
         "^",
-        "",
+        ""
       )}, but the latest version is ${version}. Do you want to update?`,
       "Yes",
-      "No",
+      "No"
     )
     .then((value) => {
       if (value === "Yes") {
