@@ -2,6 +2,9 @@
 
 All notable changes to the "remix-forge" extension will be documented in this file. 
 
+## [0.5.1]
+- fix for version not being defined
+
 ## [0.5.0]
 
 Monorepo support. Run commands inside your monorepo. It won't add code to the root but rather the selected workspace.
