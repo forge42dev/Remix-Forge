@@ -20,11 +20,13 @@ const availableComponentList = [
   "Button",
   "Calendar",
   "Card",
+  "Carousel",
   "Checkbox",
   "Collapsible",
   "Command",
   "Context Menu",
   "Dialog",
+  "Drawer",
   "Dropdown Menu",
   "Form",
   "Hover Card",
@@ -32,21 +34,25 @@ const availableComponentList = [
   "Label",
   "Menubar",
   "Navigation Menu",
+  "Pagination",
   "Popover",
   "Progress",
   "Radio Group",
+  "Resizable",
   "Scroll-area",
   "Select",
   "Separator",
   "Sheet",
   "Skeleton",
   "Slider",
+  "Sonner",
   "Switch",
   "Table",
   "Tabs",
   "Textarea",
   "Toast",
   "Toggle",
+  "Toggle Group",
   "Tooltip",
 ];
 
@@ -75,7 +81,7 @@ export const generateShadcnUI = async (uri: vscode.Uri) => {
   const initialized = await tryReadFile(joinPath(rootDir, "components.json"));
   if (!initialized) {
     vscode.window.showErrorMessage(
-      "Shadcn UI is not initialized in this project. (components.json declaration missing)",
+      "Shadcn UI is not initialized in this project. (components.json declaration missing)"
     );
     return;
   }
