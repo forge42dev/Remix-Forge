@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { installDependencies, joinPath, runCommandWithPrompt } from "../utils/vscode";
+import { installDependencies, joinPath, runCommand } from "../utils/vscode";
 import { getRemixRootFromFileUri, tryReadFile } from "../utils/file";
 
 export const initShadcnUi = async (uri: vscode.Uri) => {
@@ -13,11 +13,11 @@ export const initShadcnUi = async (uri: vscode.Uri) => {
     return;
   }
 
-  await runCommandWithPrompt({
+  await runCommand({
     rootDir,
     command: "npx shadcn-ui@latest init",
     title: "Initializing shadcn/ui",
-    promptHandler: async () => {},
+    errorMessage: "Error initializing shadcn/ui, check the logs for detailed information.",
   });
 
   await installDependencies(rootDir, [

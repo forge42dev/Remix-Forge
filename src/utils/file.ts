@@ -1,7 +1,10 @@
 import * as vscode from "vscode";
 import { getWorkspaceUri, sanitizePath } from "./vscode";
-import * as path from "path";
-
+import * as path from "node:path";
+//import { posix, win32 } from "node:path";
+//function normalizePath(path: string) {
+//  return path.replace(win32.sep, posix.sep);
+//}
 export const getFileExtension = (fileName: string) => {
   return fileName.split(".").pop()!;
 };
@@ -62,7 +65,7 @@ function getParentDirFromFileUri(uri: vscode.Uri) {
 export const isRemixDir = async (uri: vscode.Uri) => {
   const hasRemixConfig = await fileExists(uri, "remix.config.js");
   const hasPackageJson = await directoryHasPackageJson(uri);
-  return hasPackageJson && hasRemixConfig;
+  return hasPackageJson || hasRemixConfig;
 };
 
 function isChildOrNestedChildUri(parentUri: vscode.Uri, childUri: vscode.Uri) {
@@ -87,7 +90,7 @@ export const getRemixRootFromFileUri = async (uri: vscode.Uri) => {
 
 export async function findTestFile(
   filePath: string,
-  searchStrategy: FileSearchStrategy = "one-up",
+  searchStrategy: FileSearchStrategy = "one-up"
 ): Promise<vscode.Uri | null> {
   const fileName: string = filePath.split("/").pop()!;
   const fileNameExtension: string = fileName.split(".").pop()!;

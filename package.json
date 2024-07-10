@@ -2,7 +2,7 @@
   "name": "remix-forge",
   "displayName": "Remix Forge",
   "description": "Remix Forge - A VS Code extension for Remix.run applications that super charges your development with a ever-growing set of functionalities.",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "icon": "./remix-forge-logo.png",
   "keywords": [
     "Remix",
@@ -505,7 +505,7 @@
   "devDependencies": {
     "@types/glob": "^8.1.0",
     "@types/mocha": "^10.0.1",
-    "@types/node": "16.x",
+    "@types/node": "20.x",
     "@types/vscode": "^1.78.0",
     "@types/ws": "^8.5.5",
     "@typescript-eslint/eslint-plugin": "^5.59.1",

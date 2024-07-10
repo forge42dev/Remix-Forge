@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import {
   getMultiplePickableOptions,
   joinPath,
-  runCommandWithPrompt,
+  runCommand,
   sanitizePath,
   tryReadDirectory,
   writeToFile,
@@ -111,19 +111,11 @@ export const generateShadcnUI = async (uri: vscode.Uri) => {
   // Components the user picked
   const componentsToGenerate = pickedComponents.map((component) => component.key).join(" ");
 
-  await runCommandWithPrompt({
+  await runCommand({
     rootDir,
     command: `npx shadcn-ui@latest add ${componentsToGenerate}`,
     title: "Generating shadcn/ui components",
-    promptHandler: async (process, resolve) => {
-      // Write the output location to the input stream (this gets asked by the CLI)
-      process.stdin?.write("y\n");
-      // End the input stream
-      process.stdin?.end();
-
-      // Wait for the command to finish
-      process.stdout?.on("end", resolve);
-    },
+    errorMessage: "Error generating shadcn/ui components, check the logs for detailed information.",
   });
   // Fix up files
   for (const component of pickedComponents) {

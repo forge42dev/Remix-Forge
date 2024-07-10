@@ -1,8 +1,8 @@
-import type { ChildProcess } from "node:child_process";
 import * as vscode from "vscode";
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const commandWithLoading = async (title: string, action: (...args: any[]) => Promise<void> | void) => {
+  let hasError = false;
   await vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
@@ -22,7 +22,11 @@ export const commandWithLoading = async (title: string, action: (...args: any[])
         frameIndex = (frameIndex + 1) % loadingFrames.length;
       }, 50);
 
-      await action();
+      try {
+        await action();
+      } catch (e) {
+        hasError = true;
+      }
       // Stop the loading animation
       clearInterval(animateLoading);
 
@@ -30,7 +34,9 @@ export const commandWithLoading = async (title: string, action: (...args: any[])
       progress.report({ increment: 100, message: "" });
     }
   );
-  vscode.window.showInformationMessage(`${title} executed.`).then(() => {});
+  if (!hasError) {
+    vscode.window.showInformationMessage(`${title} executed.`).then(() => {});
+  }
   return;
 };
 
@@ -156,34 +162,18 @@ export const createOrGetTerminal = () => {
   return vscode.window.createTerminal();
 };
 
-export const runCommand = async ({ command, title, errorMessage, callback, rootDir }: RunCommandOptions) => {
-  await commandWithLoading(title, () => {
-    // Run npm install command
-    return new Promise((resolve) => {
-      runCommandInTask({
-        command,
-        title,
-        callback,
-        rootDir,
-      })
-        .catch(resolve)
-        .finally(resolve);
-    });
-  });
+export const runCommand = async (params: RunCommandOptions) => {
+  await commandWithLoading(params.title, () => runCommandInTask(params));
 };
 
-interface RunCommandWithPrompt {
-  title: string;
-  command: string;
-  rootDir: vscode.Uri;
-  promptHandler: (process: ChildProcess, resolve: () => void) => Promise<void>;
-}
-
-function runCommandInTask({ command, title, errorMessage, callback, rootDir }: RunCommandOptions) {
+async function runCommandInTask({ command, title, errorMessage, callback, rootDir }: RunCommandOptions) {
   return new Promise<void>((resolve, reject) => {
     try {
       // Define a shell execution for the task
-      const shellExecution = new vscode.ShellExecution(command, { cwd: rootDir?.fsPath });
+      const shellExecution = new vscode.ShellExecution(
+        command,
+        rootDir ? { cwd: rootDir.path.replace("/package.json", "") } : {}
+      );
 
       // Create a task definition
       const taskDefinition = {
@@ -203,41 +193,27 @@ function runCommandInTask({ command, title, errorMessage, callback, rootDir }: R
 
       // Listen for task end
       const endDisposable = vscode.tasks.onDidEndTaskProcess(async (e) => {
-        if (e.exitCode !== 0 && errorMessage) {
-          vscode.window.showErrorMessage(errorMessage);
+        if (e.exitCode !== 0) {
+          if (errorMessage) {
+            vscode.window.showErrorMessage(errorMessage);
+          }
+          reject();
         }
-        if (e.execution.task === task) {
+        if (e.execution.task === task && e.exitCode === 0) {
           //console.log(`Task ended: ${e.execution.task.name}`);
           await callback?.();
-          resolve();
-
-          //   startDisposable.dispose();
-          endDisposable.dispose();
         }
+        resolve();
+        endDisposable.dispose();
       });
 
       // Execute the task
       vscode.tasks.executeTask(task);
     } catch (e) {
-      reject(e);
+      reject();
     }
   });
 }
-export const runCommandWithPrompt = async ({ command, title, rootDir }: RunCommandWithPrompt) => {
-  await commandWithLoading(title, () => {
-    // Run npm install command
-    return new Promise((resolve) => {
-      runCommandInTask({
-        command,
-        title,
-        callback: () => {},
-        rootDir,
-      })
-        .catch(resolve)
-        .finally(resolve);
-    });
-  });
-};
 
 export const askInstallDependenciesPrompt = async (
   rootDir: vscode.Uri,
