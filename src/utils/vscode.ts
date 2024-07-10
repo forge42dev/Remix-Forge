@@ -1,6 +1,7 @@
-import { ChildProcess, exec } from "child_process";
+import type { ChildProcess } from "node:child_process";
 import * as vscode from "vscode";
 
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const commandWithLoading = async (title: string, action: (...args: any[]) => Promise<void> | void) => {
   await vscode.window.withProgress(
     {
@@ -27,9 +28,9 @@ export const commandWithLoading = async (title: string, action: (...args: any[])
 
       // Update notification when process is finished
       progress.report({ increment: 100, message: "" });
-    },
+    }
   );
-  vscode.window.showInformationMessage(`${title} finished!`).then(() => {});
+  vscode.window.showInformationMessage(`${title} executed.`).then(() => {});
   return;
 };
 
@@ -159,21 +160,14 @@ export const runCommand = async ({ command, title, errorMessage, callback, rootD
   await commandWithLoading(title, () => {
     // Run npm install command
     return new Promise((resolve) => {
-      exec(`${command}`, { cwd: rootDir?.fsPath }, async (error, stdout, stderr) => {
-        if (error) {
-          vscode.window.showErrorMessage(`Error: ${errorMessage}`);
-          return resolve();
-        }
-
-        if (stderr) {
-          console.error(`stderr: ${stderr}`);
-        }
-        if (stdout) {
-          console.error(`stdout: ${stdout}`);
-        }
-        await callback?.();
-        return resolve();
-      });
+      runCommandInTask({
+        command,
+        title,
+        callback,
+        rootDir,
+      })
+        .catch(resolve)
+        .finally(resolve);
     });
   });
 };
@@ -184,13 +178,63 @@ interface RunCommandWithPrompt {
   rootDir: vscode.Uri;
   promptHandler: (process: ChildProcess, resolve: () => void) => Promise<void>;
 }
-export const runCommandWithPrompt = async ({ command, title, promptHandler, rootDir }: RunCommandWithPrompt) => {
+
+function runCommandInTask({ command, title, errorMessage, callback, rootDir }: RunCommandOptions) {
+  return new Promise<void>((resolve, reject) => {
+    try {
+      // Define a shell execution for the task
+      const shellExecution = new vscode.ShellExecution(command, { cwd: rootDir?.fsPath });
+
+      // Create a task definition
+      const taskDefinition = {
+        type: "process",
+        command: command,
+      };
+
+      // Create the task
+      const task = new vscode.Task(taskDefinition, vscode.TaskScope.Workspace, title, "Custom", shellExecution);
+
+      // Listen for task start
+      // const startDisposable = vscode.tasks.onDidStartTaskProcess((e) => {
+      //   if (e.execution.task === task) {
+      //     console.log(`Task started: ${e.execution.task.name}`);
+      //   }
+      // });
+
+      // Listen for task end
+      const endDisposable = vscode.tasks.onDidEndTaskProcess(async (e) => {
+        if (e.exitCode !== 0 && errorMessage) {
+          vscode.window.showErrorMessage(errorMessage);
+        }
+        if (e.execution.task === task) {
+          //console.log(`Task ended: ${e.execution.task.name}`);
+          await callback?.();
+          resolve();
+
+          //   startDisposable.dispose();
+          endDisposable.dispose();
+        }
+      });
+
+      // Execute the task
+      vscode.tasks.executeTask(task);
+    } catch (e) {
+      reject(e);
+    }
+  });
+}
+export const runCommandWithPrompt = async ({ command, title, rootDir }: RunCommandWithPrompt) => {
   await commandWithLoading(title, () => {
     // Run npm install command
-    return new Promise(async (resolve) => {
-      const process = exec(`${command}`, { cwd: rootDir?.fsPath });
-
-      await promptHandler(process, resolve);
+    return new Promise((resolve) => {
+      runCommandInTask({
+        command,
+        title,
+        callback: () => {},
+        rootDir,
+      })
+        .catch(resolve)
+        .finally(resolve);
     });
   });
 };
@@ -198,7 +242,7 @@ export const runCommandWithPrompt = async ({ command, title, promptHandler, root
 export const askInstallDependenciesPrompt = async (
   rootDir: vscode.Uri,
   depsToInstall: string[],
-  devDepsToInstall?: string[],
+  devDepsToInstall?: string[]
 ) => {
   const deps = await getDependenciesArray(rootDir);
   const devDeps = await getDevDependenciesArray(rootDir);
@@ -244,12 +288,12 @@ export const getUserInput = async (prompt: string, value?: string) => {
 
 export const getPickableOptions = async <T extends vscode.QuickPickItem>(
   options: T[],
-  config?: vscode.QuickPickOptions,
+  config?: vscode.QuickPickOptions
 ) => await vscode.window.showQuickPick<T>(options, config);
 
 export const getMultiplePickableOptions = async <T extends vscode.QuickPickItem>(
   options: T[],
-  config?: vscode.QuickPickOptions,
+  config?: vscode.QuickPickOptions
 ) => await vscode.window.showQuickPick<T>(options, { ...config, canPickMany: true });
 
 export const sanitizePath = (path: string) => (path.startsWith("/") ? path : `/${path}`);

@@ -1,9 +1,9 @@
-import { WorkspaceConfiguration } from "vscode";
+import type { WorkspaceConfiguration } from "vscode";
 
 export const generateDependencies = (
   config: WorkspaceConfiguration,
   selectedGenerators: string[],
-  shouldIncludeLoaderData: boolean = true
+  shouldIncludeLoaderData = true
 ) => {
   const runtimeDependency = config.get("runtimeDependency") || "@remix-run/node";
   const actionImports = config.get("customActionImports") || "";
@@ -23,7 +23,15 @@ export const generateDependencies = (
   }
   if (selectedGenerators.includes("loader")) {
     remixDeps.push("LoaderFunctionArgs");
-    if (shouldIncludeLoaderData) {reactDeps.push("useLoaderData");}
+    if (shouldIncludeLoaderData) {
+      reactDeps.push("useLoaderData");
+    }
+  }
+  if (selectedGenerators.includes("clientLoader")) {
+    reactTypeDeps.push("ClientLoaderFunctionArgs");
+  }
+  if (selectedGenerators.includes("clientAction")) {
+    reactTypeDeps.push("ClientActionFunctionArgs");
   }
   if (selectedGenerators.includes("action")) {
     remixDeps.push("ActionFunctionArgs");

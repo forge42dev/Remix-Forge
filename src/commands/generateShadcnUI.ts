@@ -117,7 +117,7 @@ export const generateShadcnUI = async (uri: vscode.Uri) => {
     title: "Generating shadcn/ui components",
     promptHandler: async (process, resolve) => {
       // Write the output location to the input stream (this gets asked by the CLI)
-      process.stdin?.write(`y\n`);
+      process.stdin?.write("y\n");
       // End the input stream
       process.stdin?.end();
 

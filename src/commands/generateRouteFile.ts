@@ -1,7 +1,8 @@
 import * as vscode from "vscode";
 import { EXTENSION_CONFIG_SECTION, defaultGenerationOrder } from "../config";
-import { generatorOptions, GENERATORS, Generator, GeneratorOption } from "../generators";
+import { generatorOptions, GENERATORS, type Generator, type GeneratorOption } from "../generators";
 
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const generateRouteFile = async (uri: vscode.Uri, _: any, name?: string, opts?: GeneratorOption[]) => {
   const config = vscode.workspace.getConfiguration(EXTENSION_CONFIG_SECTION);
 
@@ -19,7 +20,7 @@ export const generateRouteFile = async (uri: vscode.Uri, _: any, name?: string, 
           title: "Select the segments you want to generate",
         });
 
-    const filePath = vscode.Uri.joinPath(uri, fileName + ".tsx");
+    const filePath = vscode.Uri.joinPath(uri, `${fileName}.tsx`);
     if (options?.length) {
       // The user has made a selection
       const selectedGenerators = options.map((option) => option.key);
@@ -29,7 +30,7 @@ export const generateRouteFile = async (uri: vscode.Uri, _: any, name?: string, 
       const orderOfGeneration = configOrder?.length ? configOrder : defaultGenerationOrder;
       const fileContent = [
         // generates dependencies first
-        GENERATORS["dependencies"](config, selectedGenerators),
+        GENERATORS.dependencies(config, selectedGenerators),
         // Generates the rest of the file
         ...orderOfGeneration.map((generatorKey) => {
           if (generatorKey === "component") {
@@ -51,7 +52,7 @@ export const generateRouteFile = async (uri: vscode.Uri, _: any, name?: string, 
       await vscode.workspace.fs.writeFile(filePath, fileContents);
     } else {
       // The user dismissed the dialog
-      const fileContent = GENERATORS["component"](config);
+      const fileContent = GENERATORS.component(config);
       const fileContents = Buffer.from(fileContent);
       // Write the file to the file system
       await vscode.workspace.fs.writeFile(filePath, fileContents);

@@ -2,7 +2,7 @@
   "name": "remix-forge",
   "displayName": "Remix Forge",
   "description": "Remix Forge - A VS Code extension for Remix.run applications that super charges your development with a ever-growing set of functionalities.",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "icon": "./remix-forge-logo.png",
   "keywords": [
     "Remix",
@@ -135,10 +135,22 @@
           "description": "Remix loader code to generate instead of the default one. Leave empty to use the default loader.",
           "editPresentation": "multilineText"
         },
+        "remix-forge.clientLoader": {
+          "type": "string",
+          "default": "",
+          "description": "Remix clientLoader code to generate instead of the default one. Leave empty to use the default clientLoader.",
+          "editPresentation": "multilineText"
+        },
         "remix-forge.action": {
           "type": "string",
           "default": "",
           "description": "Remix action code to generate instead of the default one. Leave empty to use the default action.",
+          "editPresentation": "multilineText"
+        },
+        "remix-forge.clientAction": {
+          "type": "string",
+          "default": "",
+          "description": "Remix clientAction code to generate instead of the default one. Leave empty to use the default clientAction.",
           "editPresentation": "multilineText"
         },
         "remix-forge.meta": {
@@ -270,6 +282,12 @@
         }
       }
     },
+    "submenus": [
+      {
+        "label": "Remix Forge Generators",
+        "id": "remixForgeGenerators"
+      }
+    ],
     "commands": [
       {
         "command": "remix-forge.generateRemixRoute",
@@ -280,8 +298,16 @@
         "title": "Insert Remix Loader"
       },
       {
+        "command": "remix-forge.generateClientLoader",
+        "title": "Insert Remix Client Loader"
+      },
+      {
         "command": "remix-forge.generateAction",
         "title": "Insert Remix Action"
+      },
+      {
+        "command": "remix-forge.generateClientAction",
+        "title": "Insert Remix Client Action"
       },
       {
         "command": "remix-forge.generateErrorBoundary",
@@ -357,34 +383,48 @@
       }
     ],
     "menus": {
-      "editor/context": [
+      "remixForgeGenerators": [
         {
           "command": "remix-forge.generateLoader",
-          "group": "1_Remix@10"
+          "group": "1_RemixForge@10"
+        },
+        {
+          "command": "remix-forge.generateClientLoader",
+          "group": "1_RemixForge@15"
         },
         {
           "command": "remix-forge.generateAction",
-          "group": "1_Remix@20"
+          "group": "1_RemixForge@20"
+        },
+        {
+          "command": "remix-forge.generateClientAction",
+          "group": "1_RemixForge@25"
         },
         {
           "command": "remix-forge.generateErrorBoundary",
-          "group": "1_Remix@30"
+          "group": "1_RemixForge@30"
         },
         {
           "command": "remix-forge.generateMeta",
-          "group": "1_Remix@40"
+          "group": "1_RemixForge@40"
         },
         {
           "command": "remix-forge.generateHeaders",
-          "group": "1_Remix@20"
+          "group": "1_RemixForge@20"
         },
         {
           "command": "remix-forge.generateLinks",
-          "group": "1_Remix@30"
+          "group": "1_RemixForge@30"
         },
         {
           "command": "remix-forge.generateRevalidate",
-          "group": "1_Remix@40"
+          "group": "1_RemixForge@40"
+        }
+      ],
+      "editor/context": [
+        {
+          "group": "1_Remix@1",
+          "submenu": "remixForgeGenerators"
         }
       ],
       "explorer/context": [

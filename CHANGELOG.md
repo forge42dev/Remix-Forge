@@ -2,6 +2,11 @@
 
 All notable changes to the "remix-forge" extension will be documented in this file. 
 
+## [0.5.3]
+- Added `clientLoader` generator
+- Added `clientAction` generator
+- Overhauled the execution of tasks to be seen in VS code terminal. This will allow you to see the output of the commands being run in the terminal
+
 ## [0.5.1]
 - fix for version not being defined
 

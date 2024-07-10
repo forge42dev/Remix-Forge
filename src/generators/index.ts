@@ -1,5 +1,4 @@
-import { WorkspaceConfiguration } from "vscode";
-import { config } from "../config";
+import type { WorkspaceConfiguration } from "vscode";
 import { generateAction } from "./action";
 import { generateComponent } from "./component";
 import { generateDependencies } from "./dependencies";
@@ -10,6 +9,8 @@ import { generateLinks } from "./links";
 import { generateLoader } from "./loader";
 import { generateMeta } from "./meta";
 import { generateRevalidate } from "./revalidate";
+import { generateClientLoader } from "./clintLoader";
+import { generateClientAction } from "./clientAction";
 
 export const GENERATORS = {
   action: generateAction,
@@ -19,6 +20,8 @@ export const GENERATORS = {
   headers: generateHeaders,
   links: generateLinks,
   loader: generateLoader,
+  clientLoader: generateClientLoader,
+  clientAction: generateClientAction,
   meta: generateMeta,
   revalidate: generateRevalidate,
   dependencies: generateDependencies,
@@ -69,10 +72,22 @@ export const generatorOptions = (config: WorkspaceConfiguration): GeneratorOptio
       picked: preselected.includes("loader") || allSelected,
     },
     {
+      key: "clientLoader",
+      label: "With clientLoader",
+      description: "Generate a clientLoader function inside the route",
+      picked: preselected.includes("clientLoader") || allSelected,
+    },
+    {
       key: "action",
       label: "With action",
       description: "Generate an action function inside the route",
       picked: preselected.includes("action") || allSelected,
+    },
+    {
+      key: "clientAction",
+      label: "With clientAction",
+      description: "Generate a clientAction function inside the route",
+      picked: preselected.includes("clientAction") || allSelected,
     },
     {
       key: "errorBoundary",

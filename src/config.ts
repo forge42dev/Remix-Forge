@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { Generator } from "./generators";
+import type { Generator } from "./generators";
 
 export const EXTENSION_CONFIG_SECTION = "remix-forge";
 
@@ -11,7 +11,9 @@ export const defaultGenerationOrder: Exclude<Generator, "dependencies">[] = [
   "handler",
   "headers",
   "loader",
+  "clientLoader",
   "action",
+  "clientAction",
   "component",
   "errorBoundary",
   "revalidate",

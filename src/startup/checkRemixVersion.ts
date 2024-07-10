@@ -1,4 +1,4 @@
-import { exec } from "child_process";
+import { exec } from "node:child_process";
 import { getPackageJson } from "../utils/vscode";
 import { updateRemix } from "../commands";
 import * as vscode from "vscode";
@@ -30,8 +30,8 @@ export const checkRemixVersion = async (uri: vscode.Uri) => {
     return;
   }
 
-  const promise = new Promise<string | undefined>(async (resolve) => {
-    exec(`npm view @remix-run/react version`, { cwd: rootDir?.fsPath }, (error, stdout, stderr) => {
+  const promise = new Promise<string | undefined>((resolve) => {
+    exec("npm view @remix-run/react version", { cwd: rootDir?.fsPath }, (error, stdout, stderr) => {
       if (error) {
         return resolve(undefined);
       }

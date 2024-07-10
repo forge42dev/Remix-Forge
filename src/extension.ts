@@ -32,45 +32,53 @@ export async function activate(context: vscode.ExtensionContext) {
   const updateRemixCommand = vscode.commands.registerCommand(generateCommand("updateRemix"), updateRemix);
   const generatePrismaCommand = vscode.commands.registerCommand(generateCommand("generatePrisma"), generatePrisma);
   const generateTestsCommand = vscode.commands.registerCommand(generateCommand("generateTests"), generateTests);
+
   const generateLoaderCommand = vscode.commands.registerCommand(generateCommand("generateLoader"), () =>
-    generateRemixPartial("loader"),
+    generateRemixPartial("loader")
   );
+  const generateClientLoaderCommand = vscode.commands.registerCommand(generateCommand("generateClientLoader"), () =>
+    generateRemixPartial("clientLoader")
+  );
+
   const generateActionCommand = vscode.commands.registerCommand(generateCommand("generateAction"), () =>
-    generateRemixPartial("action"),
+    generateRemixPartial("action")
+  );
+  const generateClientActionCommand = vscode.commands.registerCommand(generateCommand("generateClientAction"), () =>
+    generateRemixPartial("clientAction")
   );
   const generateErrorBoundaryCommand = vscode.commands.registerCommand(generateCommand("generateErrorBoundary"), () =>
-    generateRemixPartial("errorBoundary"),
+    generateRemixPartial("errorBoundary")
   );
   const generateMetaCommand = vscode.commands.registerCommand(generateCommand("generateMeta"), () =>
-    generateRemixPartial("meta"),
+    generateRemixPartial("meta")
   );
   const generateHeadersCommand = vscode.commands.registerCommand(generateCommand("generateHeaders"), () =>
-    generateRemixPartial("headers"),
+    generateRemixPartial("headers")
   );
   const generateLinksCommand = vscode.commands.registerCommand(generateCommand("generateLinks"), () =>
-    generateRemixPartial("links"),
+    generateRemixPartial("links")
   );
   const generateRevalidateCommand = vscode.commands.registerCommand(generateCommand("generateRevalidate"), () =>
-    generateRemixPartial("revalidate"),
+    generateRemixPartial("revalidate")
   );
   const lintingCommand = vscode.commands.registerCommand(generateCommand("linting"), linting);
   const initShadcnUiCommand = vscode.commands.registerCommand(generateCommand("initShadcnUi"), initShadcnUi);
   const generateShadcnUICommand = vscode.commands.registerCommand(
     generateCommand("generateShadcnUI"),
-    generateShadcnUI,
+    generateShadcnUI
   );
 
   const generateRouteFileCommand = vscode.commands.registerCommand(
     generateCommand("generateRemixRoute"),
-    generateRouteFile,
+    generateRouteFile
   );
   const generateRemixFormRouteCommand = vscode.commands.registerCommand(
     generateCommand("generateRemixFormRoute"),
-    generateRemixFormRoute,
+    generateRemixFormRoute
   );
   const generateAuthSnippetCommand = vscode.commands.registerCommand(
     generateCommand("generateAuthSnippet"),
-    generateAuthSnippet,
+    generateAuthSnippet
   );
   const codeLensProvider = new ComponentLens();
   const loaderLens = new LoaderLens();
@@ -78,7 +86,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
   const statusBarAddition = createStatusBar();
   const devToolsCommand = vscode.commands.registerCommand(generateCommand("devTools"), () =>
-    startDevTools(statusBarAddition),
+    startDevTools(statusBarAddition)
   );
   // Add the status bar item to the extensions' context
   context.subscriptions.push(statusBarAddition);
@@ -89,7 +97,7 @@ export async function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.languages.registerCodeLensProvider({ scheme: "file", language: "typescriptreact" }, codeLensProvider),
     vscode.languages.registerCodeLensProvider({ scheme: "file", language: "typescriptreact" }, loaderLens),
-    vscode.languages.registerCodeLensProvider({ scheme: "file", language: "typescriptreact" }, actionLens),
+    vscode.languages.registerCodeLensProvider({ scheme: "file", language: "typescriptreact" }, actionLens)
   );
 
   // Register the commands
@@ -115,6 +123,8 @@ export async function activate(context: vscode.ExtensionContext) {
     generateLinksCommand,
     generateRevalidateCommand,
     devToolsCommand,
+    generateClientLoaderCommand,
+    generateClientActionCommand
   );
   // Do all the startup checks after this line
   const workspaceUri = getWorkspaceUri();
