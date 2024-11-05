@@ -2,6 +2,10 @@
 
 All notable changes to the "remix-forge" extension will be documented in this file. 
 
+## [0.5.5]
+
+- Updated Remix Form Route with conform v1 
+
 ## [0.5.3]
 - Added `clientLoader` generator
 - Added `clientAction` generator
